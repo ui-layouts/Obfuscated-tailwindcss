@@ -1082,7 +1082,7 @@ function generateMappingCss(mapping) {
   let css = "/* Auto-generated Tailwind class obfuscation mapping */\n";
   css += "/* DO NOT EDIT MANUALLY - This file is regenerated on build */\n\n";
   css += '@reference "tailwindcss";\n\n';
-  css += '@reference "./token.css";\n\n';
+  // css += '@reference "./token.css";\n\n';
 
   css +=
     "@theme { --color-bgbackground: #ffffff; --color-base-dark: #0a0a0a; --color-accent: #your-color; }";
