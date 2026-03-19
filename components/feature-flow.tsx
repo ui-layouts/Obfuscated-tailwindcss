@@ -68,7 +68,7 @@ const items = [
 
 export const FeatureFlow: React.FC = () => {
   return (
-    <section className="py-32 px-6 bg-white overflow-hidden font-manrope relative">
+    <section className="py-32 px-6 bg-white overflow-hidden relative">
       <div className="max-w-7xl mx-auto">
         <Carousel options={{ align: "start", loop: false }}>
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
