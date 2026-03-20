@@ -5,7 +5,7 @@ import { FeatureFlow } from "@/components/feature-flow";
 import { HeroFooter } from "@/components/hero-footer";
 
 export const metadata: Metadata = {
-  title: "Example - Obfuscated TailwindCSS",
+  title: "Example | Obfuscated TailwindCSS",
   description:
     "See live examples of TailwindCSS obfuscation. View before and after comparisons, real-world use cases, and performance benefits of CSS obfuscation.",
   keywords: [
