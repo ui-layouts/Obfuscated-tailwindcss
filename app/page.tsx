@@ -150,10 +150,10 @@ export default function Home() {
           </span>
         </a>
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-medium text-neutral-900 mb-4 relative">
+          <h1 className="2xl:text-5xl lg:text-4xl text-3xl font-medium text-neutral-900 mb-4 relative">
             Obfuscated TailwindCSS
           </h1>
-          <p className="text-xl text-neutral-600 max-w-2xl mx-auto leading-7 mb-8">
+          <p className="2xl:text-xl lg:text-lg text-sm text-neutral-600 max-w-2xl mx-auto mb-8">
             <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 font-medium">
               No npm, no other dependencies.
             </span>
