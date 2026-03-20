@@ -1,14 +1,6 @@
 # Obfuscated TailwindCSS
 
-A Next.js project that demonstrates TailwindCSS class obfuscation for production builds. This project converts readable Tailwind utility classes into obfuscated CSS class names to reduce bundle size and obscure your styling implementation.
-
-## 🚀 Features
-
-- **TailwindCSS Obfuscation**: Converts Tailwind utility classes to random, short class names
-- **Next.js 16**: Built with the latest Next.js framework
-- **TypeScript**: Full TypeScript support
-- **Shadcn/ui Components**: Pre-built UI components
-- **Production Optimized**: Reduced CSS bundle size through obfuscation
+A Next.js project built with TailwindCSS, TypeScript, and shadcn/ui components that demonstrates TailwindCSS class obfuscation for production builds. This project converts readable Tailwind utility classes into obfuscated CSS class names to reduce bundle size and obscure your styling implementation.
 
 ## 📦 Installation
 
@@ -46,7 +38,13 @@ Add these scripts to your `package.json`:
 }
 ```
 
-### Step 4: Add CSS Import
+### Step 4: Build with Obfuscation
+
+```bash
+npm run build
+```
+
+### Step 5: Add CSS Import
 
 Add this import to your `app/layout.tsx`:
 
@@ -55,61 +53,6 @@ import "./obfuscated-styles.css";
 ```
 
 Place it right after your `globals.css` import.
-
-## 🛠️ Available Scripts
-
-The following scripts are available in your `package.json`:
-
-### Development
-```bash
-npm run dev
-```
-Starts the Next.js development server on `http://localhost:3000`.  
-**Note**: This runs without obfuscation for easier development.
-
-### Build with Obfuscation
-```bash
-npm run build
-```
-This is a **two-step process**:
-1. First runs the obfuscation script: `node scripts/obfuscate-tailwind.js`
-2. Then builds the Next.js application: `next build`
-
-The obfuscation script:
-- Scans all React/TypeScript files for Tailwind classes
-- Converts found classes to obfuscated names (e.g., `flex` → `a1b2c3d4`)
-- Generates a CSS file with the obfuscated styles
-- Creates a mapping file for debugging
-
-### Production Server
-```bash
-npm run start
-```
-Starts the production server after running `npm run build`.
-
-### Linting
-```bash
-npm run lint
-```
-Runs ESLint to check for code issues.
-
-## 📁 Project Structure
-
-```
-obfuscated-tailwindcss/
-├── app/                    # Next.js app directory
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page with documentation
-│   └── obfuscated-styles.css  # Generated obfuscated CSS
-├── components/             # React components
-│   ├── ui/               # Shadcn/ui components
-│   └── hero-footer.tsx   # Example component
-├── scripts/               # Build scripts
-│   └── obfuscate-tailwind.js  # Main obfuscation script
-├── lib/                  # Utility libraries
-├── public/               # Static assets
-└── package.json          # Project configuration
-```
 
 ## 🔧 How Obfuscation Works
 
@@ -132,22 +75,6 @@ The script scans these file patterns for Tailwind classes:
 ### 4. Mapping File
 - Generates `.obfuscation-map.json` for debugging
 - Shows the relationship between original and obfuscated classes
-
-## 🎯 Supported Tailwind Classes
-
-The obfuscation script supports over 700+ Tailwind utility classes including:
-
-- **Layout**: `flex`, `grid`, `block`, `hidden`
-- **Spacing**: `p-`, `m-`, `gap-`, `space-`
-- **Sizing**: `w-`, `h-`, `min-`, `max-`
-- **Typography**: `text-`, `font-`, `leading-`
-- **Colors**: `bg-`, `text-`, `border-`
-- **Flexbox**: `items-`, `justify-`, `self-`
-- **Grid**: `grid-cols-`, `col-span-`, `row-span-`
-- **Position**: `absolute`, `relative`, `top-`, `left-`
-- **Borders**: `border-`, `rounded-`
-- **Effects**: `shadow-`, `opacity-`, `transition-`
-- **Transforms**: `scale-`, `rotate-`, `translate-`
 
 ## 🚀 Usage Example
 
@@ -177,44 +104,6 @@ The obfuscation script supports over 700+ Tailwind utility classes including:
 .c9d0e1f2 { font-weight: 700; }
 ```
 
-## 🔍 Development vs Production
-
-### Development Mode
-- Uses regular Tailwind classes for better DX
-- Hot reload works as expected
-- Classes remain readable in dev tools
-
-### Production Mode
-- Classes are obfuscated for smaller bundles
-- CSS is optimized and minified
-- Implementation details are hidden
-
-## 🐛 Debugging
-
-If you need to debug obfuscated classes:
-
-1. Check the generated `.obfuscation-map.json` file
-2. Use browser dev tools to inspect the generated CSS
-3. Temporarily disable obfuscation by modifying the build script
-
-## 📝 Package.json Scripts Explained
-
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "node scripts/obfuscate-tailwind.js && next build",
-    "start": "next start",
-    "lint": "eslint"
-  }
-}
-```
-
-- **`dev`**: Development server without obfuscation
-- **`build`**: Production build with obfuscation (⚠️ **Always run this for production**)
-- **`start`**: Production server (requires build first)
-- **`lint`**: Code quality checks
-
 ## 🎨 Customization
 
 ### Modifying Obfuscation Settings
@@ -224,24 +113,25 @@ Edit `scripts/obfuscate-tailwind.js` to change:
 - `outputCssPath`: Where to save generated CSS
 - `excludePatterns`: Files/directories to ignore
 
-### Adding New Tailwind Classes
-Extend the `TAILWIND_TO_CSS` mapping in the obfuscation script to support additional utility classes.
 
-## 🚀 Deployment
+## 📁 Project Structure
 
-When deploying to production:
+```
+obfuscated-tailwindcss/
+├── app/                    # Next.js app directory
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page with documentation
+│   └── obfuscated-styles.css  # Generated obfuscated CSS
+├── components/             # React components
+│   ├── ui/               # Shadcn/ui components
+│   └── hero-footer.tsx   # Example component
+├── scripts/               # Build scripts
+│   └── obfuscate-tailwind.js  # Main obfuscation script
+├── lib/                  # Utility libraries
+├── public/               # Static assets
+└── package.json          # Project configuration
+```
 
-1. **Always use the obfuscated build**:
-   ```bash
-   npm run build
-   ```
-
-2. **Deploy the `.next` folder** and `public` folder
-
-3. **Ensure your hosting platform** runs the production server:
-   ```bash
-   npm run start
-   ```
 
 ## 📊 Benefits
 

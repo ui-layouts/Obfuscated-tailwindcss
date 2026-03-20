@@ -25,7 +25,7 @@ export const HeroAiValueProposition = () => {
         timelineRef={timelineRef}
         className="relative z-10 w-full max-w-7xl mx-auto p-6 flex items-center justify-between border-x border-zinc-200"
       >
-        <div className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2">
           <svg
             className="fill-black w-8 h-8"
             width="97"
@@ -39,7 +39,7 @@ export const HeroAiValueProposition = () => {
           <span className="text-xl font-bold tracking-tight text-slate-900">
             UI-Layout
           </span>
-        </div>
+        </a>
 
         <button className="bg-white border border-neutral-100 text-neutral-500 px-4 py-2.5 rounded-full font-bold text-sm shadow-sm hover:text-black hover:border-neutral-300 transition-all cursor-pointer">
           Sign in
