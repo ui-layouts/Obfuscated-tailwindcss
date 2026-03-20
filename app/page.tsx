@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Obfuscated TailwindCSS",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og.jpg",
         width: 1200,
         height: 630,
         alt: "Obfuscated TailwindCSS - CSS Protection and Optimization",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "Obfuscated TailwindCSS - Protect & Optimize Your CSS",
     description:
       "Transform your Tailwind classes into obfuscated CSS. Reduce bundle size and protect your code.",
-    images: ["/og-image.png"],
+    images: ["/og.jpg"],
     creator: "@naymur_dev",
   },
   robots: {

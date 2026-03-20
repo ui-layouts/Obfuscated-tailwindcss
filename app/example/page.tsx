@@ -5,7 +5,7 @@ import { FeatureFlow } from "@/components/feature-flow";
 import { HeroFooter } from "@/components/hero-footer";
 
 export const metadata: Metadata = {
-  title: "Example - Obfuscated TailwindCSS in Action",
+  title: "Example - Obfuscated TailwindCSS",
   description:
     "See live examples of TailwindCSS obfuscation. View before and after comparisons, real-world use cases, and performance benefits of CSS obfuscation.",
   keywords: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     url: "https://obfuscated-tailwind.ui-layouts.com/example",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og.jpg",
         width: 1200,
         height: 630,
         alt: "Obfuscated TailwindCSS Examples and Demos",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Obfuscated TailwindCSS Examples - See It in Action",
     description:
       "Explore real-world examples of CSS obfuscation with before/after comparisons.",
-    images: ["/og-image.png"],
+    images: ["/og.jpg"],
   },
 };
 
