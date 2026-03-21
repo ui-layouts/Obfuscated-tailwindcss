@@ -1,0 +1,161 @@
+---
+title: "Getting Started"
+description: "Learn how to set up and use Obfuscated TailwindCSS in your project"
+---
+
+# Getting Started with Obfuscated TailwindCSS
+
+A Next.js project built with TailwindCSS, TypeScript, and shadcn/ui components that demonstrates TailwindCSS class obfuscation for production builds. This project converts readable Tailwind utility classes into obfuscated CSS class names to reduce bundle size and obscure your styling implementation.
+
+## 📦 Installation
+
+### Step 1: Add Required Dependencies
+
+Add these dependencies to your existing Next.js project:
+
+```bash
+npm install uuid
+npm install -D glob @types/uuid
+# or
+bun add uuid
+bun add -d glob @types/uuid
+# or
+yarn add uuid
+yarn add --dev glob @types/uuid
+```
+
+### Step 2: Add Obfuscation Script
+
+Create `scripts/obfuscate-tailwind.js` in your project with the obfuscation script content.
+
+### Step 3: Update Package.json Scripts
+
+Add these scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/obfuscate-tailwind.js && next build",
+    "start": "next start",
+    "lint": "eslint"
+  }
+}
+```
+
+### Step 4: Build with Obfuscation
+
+```bash
+npm run build
+```
+
+### Step 5: Add CSS Import
+
+Add this import to your `app/layout.tsx`:
+
+```tsx
+import "./obfuscated-styles.css";
+```
+
+Place it right after your `globals.css` import.
+
+## 🔧 How Obfuscation Works
+
+### 1. Class Detection
+
+The script scans all your React/TypeScript files for Tailwind class names using regex patterns.
+
+### 2. Class Mapping
+
+Each detected class is mapped to a unique, short identifier:
+
+- `flex` → `a1b2c3d4`
+- `p-4` → `e5f6g7h8`
+- `bg-blue-500` → `i9j0k1l2`
+
+### 3. CSS Generation
+
+A new CSS file is created with the obfuscated class names containing the original Tailwind styles.
+
+### 4. Source Code Updates
+
+Your source code is updated with the obfuscated class names.
+
+## 🚀 Usage Example
+
+### Before Obfuscation
+
+```tsx
+<div className="flex items-center justify-center p-4 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 transition-colors transform hover:scale-105 border-2 border-blue-300 font-semibold">
+  <h1 className="text-2xl font-bold">Hello World</h1>
+</div>
+```
+
+### After Obfuscation
+
+```tsx
+<div className="a1b2c3d4 e5f6g7h8 i9j0k1l2 m3n4o5p6 q7r8s9t0 u1v2w3x4 y5z6a7b8 c9d0e1f2 g3h4i5j6">
+  <h1 className="k7l8m9n0 o1p2q3r4">Hello World</h1>
+</div>
+```
+
+### Generated CSS
+
+```css
+.a1b2c3d4 { display: flex; }
+.e5f6g7h8 { align-items: center; }
+.i9j0k1l2 { justify-content: center; }
+.m3n4o5p6 { padding: 1rem; }
+.q7r8s9t0 { background-color: rgb(59 130 246); }
+/* ... more styles */
+.k7l8m9n0 { font-size: 1.5rem; line-height: 2rem; }
+.o1p2q3r4 { font-weight: 700; }
+```
+
+## 📁 Project Structure
+
+```
+obfuscated-tailwindcss/
+├── app/                    # Next.js app directory
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page with documentation
+│   └── obfuscated-styles.css  # Generated obfuscated CSS
+├── components/             # React components
+│   ├── ui/               # Shadcn/ui components
+│   └── hero-footer.tsx   # Example component
+├── scripts/               # Build scripts
+│   └── obfuscate-tailwind.js  # Main obfuscation script
+├── lib/                  # Utility libraries
+├── public/               # Static assets
+└── package.json          # Project configuration
+```
+
+## 📊 Benefits
+
+- **🔒 Code Protection**: Hides your implementation details from competitors
+- **📦 Bundle Size**: Shorter class names reduce CSS file size
+- **⚡ Performance**: Smaller files load faster
+- **🛡️ IP Protection**: Makes it harder to copy your styling approach
+- **🎯 Production Ready**: Optimized for production environments
+
+## 🎨 Customization
+
+### Modifying Obfuscation Settings
+
+You can customize the obfuscation by modifying the `obfuscate-tailwind.js` script:
+
+- `inputDir`: Directories to scan for class names
+- `outputCssPath`: Where to save generated CSS
+- `excludePatterns`: Files/directories to ignore
+
+## 🔍 Development vs Production
+
+### Development Mode
+- Uses regular Tailwind classes for better DX
+- Hot reload works as expected
+- Classes remain readable in dev tools
+
+### Production Mode
+- Classes are obfuscated for smaller bundles
+- CSS is optimized and minified
+- Implementation details are hidden
