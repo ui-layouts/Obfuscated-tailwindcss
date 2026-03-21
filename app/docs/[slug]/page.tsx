@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 import GettingStartedDoc from "../getting-started.mdx";
-import ExamplesDoc from "../examples.mdx";
+import TokenSetupDoc from "../token-setup.mdx";
 
 type DocModule = {
   title: string;
@@ -16,11 +16,11 @@ const docs: Record<string, DocModule> = {
       "Install the obfuscation script, wire up token.css, and generate production-ready obfuscated Tailwind styles.",
     Component: GettingStartedDoc,
   },
-  examples: {
-    title: "Examples",
+  "token-setup": {
+    title: "Token Setup",
     description:
-      "See how readable Tailwind utilities turn into generated obfuscated classes, including token-based utilities.",
-    Component: ExamplesDoc,
+      "Fix semantic color token issues by moving shared variables into token.css and referencing them from the generated stylesheet.",
+    Component: TokenSetupDoc,
   },
 };
 

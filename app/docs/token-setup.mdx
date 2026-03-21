@@ -1,0 +1,97 @@
+# Token setup
+
+This page explains the token-related issue that usually causes obfuscated builds to miss semantic classes such as `bg-primary`, `text-primary-foreground`, `bg-background`, and `border-border`.
+
+## Why the issue happens
+
+When the generated obfuscated stylesheet uses `@apply`, Tailwind still needs access to the theme variables behind those semantic utilities. If your shared tokens only live inside `globals.css`, the generated file can miss them unless you explicitly reference a dedicated token file.
+
+## The fix
+
+### 1. Move shared theme tokens into `app/token.css`
+
+```css
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+}
+```
+
+### 2. Import the token file from `app/globals.css`
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./token.css";
+```
+
+### 3. Reference the token file in the generated obfuscated CSS
+
+```js
+css += '@reference "tailwindcss";\n';
+css += '@reference "./token.css";\n\n';
+```
+
+## Before and after
+
+### Input component
+
+```tsx
+<button className="bg-primary text-primary-foreground border border-border hover:bg-primary/90">
+  Save changes
+</button>
+```
+
+### Obfuscated component output
+
+```tsx
+<button className="z9y8x7w6">Save changes</button>
+```
+
+### Generated CSS output
+
+```css
+.z9y8x7w6 {
+  @apply bg-primary text-primary-foreground border border-border hover:bg-primary/90;
+}
+```
+
+## What breaks if you skip this
+
+If `token.css` is missing or the generated stylesheet does not include `@reference "./token.css";`, Tailwind may fail to resolve token-based utilities in the obfuscated output.
+
+That is why the generated selectors can work for plain utilities like `flex`, `rounded-lg`, or `text-white`, but fail for semantic project tokens like `bg-primary` or `bg-background`.
+
+## Recommended structure
+
+```text
+app/
+├── docs/
+│   ├── getting-started.mdx
+│   └── token-setup.mdx
+├── globals.css
+├── layout.tsx
+├── obfuscated-styles.css
+└── token.css
+scripts/
+└── obfuscate-tailwind.js
+```
+
+## Quick checklist
+
+- Keep shared theme variables in `app/token.css`.
+- Import `./token.css` from `app/globals.css`.
+- Keep `@reference "./token.css";` enabled in the generated stylesheet.
+- Run the obfuscation step before `next build`.

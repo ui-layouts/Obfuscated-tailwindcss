@@ -168,10 +168,10 @@ export default function Home() {
               Documentation
             </a>
             <a
-              href="/docs/examples"
+              href="/example"
               className="inline-flex p-3 bg-blue-500 text-white cursor-pointer border"
             >
-              Interactive Examples
+              Live Example
             </a>
             <a
               href="https://github.com/ui-layouts/Obfuscated-tailwindcss"
