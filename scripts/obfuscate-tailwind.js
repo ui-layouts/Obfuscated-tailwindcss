@@ -88,22 +88,25 @@ function isPureCustomClass(classString) {
 
 function getValidClassString(classString) {
   if (!classString || classString.trim().length === 0) return null;
+
   const validClasses = classString
     .trim()
     .split(/\s+/)
     .filter((cls) => {
       if (!cls || cls.length < 2) return false;
-      if (cls.includes("[") || cls.includes("]")) return false;
-      if (cls.includes("(") || cls.includes(")")) return false;
       if (cls.includes(",")) return false;
       if (cls.includes("`") || cls.includes("$")) return false;
       if (cls.includes("{") || cls.includes("}")) return false;
       if (cls.endsWith("-")) return false;
+      if (cls.endsWith(":")) return false;
       if (SKIP_CLASSES.includes(cls)) return false;
+      if (cls.includes("[") && !cls.includes("]")) return false;
+      if (cls.includes("]") && !cls.includes("[")) return false;
       return true;
     });
+
   if (validClasses.length === 0) return null;
-  return validClasses.join(" ");
+  return validClasses.join(" "); // ← calling .join on a STRING, not array!
 }
 
 function extractClassStrings(content) {
@@ -178,7 +181,18 @@ function replaceClassesInFile(filePath, mapping) {
         const obfuscated = mapping[classString];
         if (!obfuscated) return match;
         modified = true;
-        return match.split(classString).join(obfuscated);
+
+        // ✅ Keep group/peer in HTML alongside obfuscated class
+        const keepInHtml = classString
+          .split(/\s+/)
+          .filter((cls) => ["group", "peer"].includes(cls))
+          .join(" ");
+
+        const replacement = keepInHtml
+          ? `${keepInHtml} ${obfuscated}`
+          : obfuscated;
+
+        return match.split(classString).join(replacement);
       } catch (e) {
         return match;
       }
@@ -225,7 +239,8 @@ function generateMappingCss(mapping) {
   let css = "/* Auto-generated obfuscation mapping */\n";
   css += "/* DO NOT EDIT MANUALLY - regenerated on build */\n\n";
   css += '@reference "tailwindcss";\n';
-  // css += '@reference "./tokens.css";\n\n';
+  // Uncomment when your project keeps semantic Tailwind tokens in app/token.css
+  // css += '@reference "./token.css";\n\n';
 
   for (const [classString, obfuscatedName] of Object.entries(mapping)) {
     // Keep variant classes like dark:, hover:, md:, 2xl: in @apply
@@ -234,14 +249,18 @@ function generateMappingCss(mapping) {
       .split(/\s+/)
       .filter((cls) => {
         if (!cls || cls.length < 2) return false;
-        if (cls.includes("[") || cls.includes("]")) return false;
-        if (cls.includes("(") || cls.includes(")")) return false;
         if (cls.includes(",")) return false;
         if (cls.includes("`") || cls.includes("$")) return false;
         if (cls.includes("{") || cls.includes("}")) return false;
         if (cls.endsWith("-")) return false;
-        if (cls.endsWith(":")) return false; // bare "hover:" with nothing after
+        if (cls.endsWith(":")) return false;
         if (SKIP_CLASSES.includes(cls)) return false;
+
+        // ✅ Only skip BROKEN arbitrary values - unclosed brackets
+        // Keep valid ones like w-[62rem], md:w-[85%], h-[55vh] etc
+        if (cls.includes("[") && !cls.includes("]")) return false;
+        if (cls.includes("]") && !cls.includes("[")) return false;
+
         return true;
       })
       .join(" ");

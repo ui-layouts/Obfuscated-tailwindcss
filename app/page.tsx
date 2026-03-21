@@ -162,10 +162,16 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center">
             <a
-              href="/example"
+              href="/docs/getting-started"
               className="inline-flex p-3 bg-black text-white cursor-pointer border"
             >
-              View Examples
+              Documentation
+            </a>
+            <a
+              href="/docs/examples"
+              className="inline-flex p-3 bg-blue-500 text-white cursor-pointer border"
+            >
+              Interactive Examples
             </a>
             <a
               href="https://github.com/ui-layouts/Obfuscated-tailwindcss"
@@ -194,8 +200,12 @@ export default function Home() {
         </div>
 
         {/* Interactive Demo */}
-        <section className="mb-16">
-          <div className="bg-white p-8">
+        <section className="mb-16 relative">
+          {/* <div className="absolute bottom-0 left-0 right-0 top-0 z-10 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[14px_24px] mask-[radial-gradient(ellipse_55%_45%_at_50%_50%,#000_70%,transparent_110%)]"></div> */}
+          <figure className="p-10 ">
+            <Image src="/thumbnail.jpg" alt="Demo" width={2000} height={800} />
+          </figure>
+          {/* <div className="bg-white p-8">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <label className="block text-sm font-medium text-neutral-800 mb-2">
@@ -227,7 +237,7 @@ export default function Home() {
             <p className="text-sm text-neutral-500 mt-3 text-center">
               Note: Actual obfuscation happens automatically during build
             </p>
-          </div>
+          </div> */}
         </section>
 
         {/* Installation Steps */}

@@ -1,0 +1,157 @@
+# Getting started
+
+Obfuscated TailwindCSS is a build-time workflow that rewrites readable Tailwind utility strings into short generated classes, then emits a CSS file that maps those generated classes back to the original Tailwind styles.
+
+## What you add to your project
+
+1. Copy the obfuscation script into `scripts/obfuscate-tailwind.js`.
+2. Run that script before `next build`.
+3. Import the generated `obfuscated-styles.css` file from `app/layout.tsx`.
+4. Keep your design tokens in a separate `token.css` file and import it from `globals.css` so token-based utilities like `bg-primary` and `bg-background` can still be generated.
+
+## Install the required packages
+
+```bash
+npm install uuid
+npm install -D glob @types/uuid
+```
+
+Or use your preferred package manager:
+
+```bash
+bun add uuid
+bun add -d glob @types/uuid
+```
+
+```bash
+yarn add uuid
+yarn add --dev glob @types/uuid
+```
+
+## Add the build script
+
+Create `scripts/obfuscate-tailwind.js`, then make sure your build command runs it before Next.js builds the app:
+
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/obfuscate-tailwind.js && next build",
+    "start": "next start",
+    "lint": "eslint"
+  }
+}
+```
+
+## Import the generated stylesheet
+
+In `app/layout.tsx`, import the generated CSS file next to `globals.css`:
+
+```tsx
+import "./obfuscated-styles.css";
+import "./globals.css";
+```
+
+The obfuscation script writes all generated selectors into `app/obfuscated-styles.css`.
+
+## Required setup for token-based colors
+
+If your project uses Tailwind token utilities such as `bg-primary`, `text-primary-foreground`, `bg-background`, or `border-border`, you should move your shared color variables into a dedicated `token.css` file.
+
+### 1. Create `app/token.css`
+
+Put your CSS variables and `@theme inline` mapping in that file.
+
+```css
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+}
+```
+
+### 2. Import `token.css` from `app/globals.css`
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./token.css";
+```
+
+### 3. Enable the token reference inside the generated CSS
+
+In `scripts/obfuscate-tailwind.js`, uncomment the token reference so the generated obfuscated stylesheet can resolve those tokens while applying utilities:
+
+```js
+css += '@reference "tailwindcss";\n';
+css += '@reference "./token.css";\n\n';
+```
+
+Without that reference, Tailwind can miss token-backed utilities during generation, which is the main reason classes like `bg-primary` and `bg-background` appear to break in the obfuscated output.
+
+## What the script does
+
+### 1. Scan your source files
+
+The script scans these paths:
+
+- `src/**/*.{jsx,tsx,js,ts,html}`
+- `pages/**/*.{jsx,tsx}`
+- `components/**/*.{jsx,tsx}`
+- `app/**/*.{jsx,tsx}`
+
+### 2. Build a class mapping
+
+A readable utility string like this:
+
+```tsx
+<div className="flex items-center justify-center bg-primary text-primary-foreground p-4 rounded-lg" />
+```
+
+becomes something like this after the build step:
+
+```tsx
+<div className="a1b2c3d4" />
+```
+
+### 3. Generate obfuscated CSS
+
+The generated stylesheet keeps the original Tailwind behavior through `@apply`:
+
+```css
+.a1b2c3d4 {
+  @apply flex items-center justify-center bg-primary text-primary-foreground p-4 rounded-lg;
+}
+```
+
+### 4. Save the mapping file
+
+The script also writes `.obfuscation-map.json` so you can inspect how each original class string maps to its generated selector.
+
+## Recommended workflow
+
+- Use normal Tailwind classes during development.
+- Keep all theme variables in `app/token.css`.
+- Import `token.css` in `app/globals.css`.
+- Keep the `@reference "./token.css";` line enabled in the obfuscation script.
+- Run `npm run build` to regenerate the obfuscated CSS before deployment.
+
+## Output files
+
+After a successful build, you should see:
+
+- `app/obfuscated-styles.css`
+- `.obfuscation-map.json`
+
+These are generated files and should reflect the current classes found in your project.
