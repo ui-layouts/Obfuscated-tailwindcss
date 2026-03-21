@@ -71,17 +71,21 @@ export default function DocsLayout({
                 Getting Started
               </a>
               <a
-                href="/docs/token-setup"
+                href="/docs/setup-script"
                 className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
               >
-                Token Setup
+                Setup Script
+              </a>
+              <a
+                href="/docs/skip-classes"
+                className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
+              >
+                Skip Classes
               </a>
             </nav>
           </aside>
 
-          <div className="lg:col-span-3">
-            {children}
-          </div>
+          <div className="lg:col-span-3">{children}</div>
         </div>
       </main>
     </div>

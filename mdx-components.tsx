@@ -47,6 +47,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     }: React.HTMLAttributes<HTMLParagraphElement>) => (
       <p className={cn("leading-7 pt-3 pb-2 m-0", className)} {...props} />
     ),
+    span: ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
+      <span className={cn("leading-7 pt-3 pb-2 m-0", className)} {...props} />
+    ),
+    h1: ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
+      <span className={cn("leading-7 pt-3 pb-2 m-0", className)} {...props} />
+    ),
     div: ({
       className,
       children,
@@ -75,7 +81,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       className,
       ...props
     }: React.HTMLAttributes<HTMLTableElement>) => (
-      <div className="m-0 w-full overflow-auto not-prose  ">
+      <div className="m-0 w-full overflow-auto not-prose">
         <table className={cn("w-full mb-2", className)} {...props} />
       </div>
     ),
@@ -85,7 +91,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     }: React.HTMLAttributes<HTMLTableRowElement>) => (
       <tr
         className={cn(
-          "m-0  w-ful overflow-auto border-t p-0 text-sm [&>td:last-child]:w-full",
+          "m-0 w-ful overflow-auto border-t p-0 text-sm [&>td:last-child]:w-full",
           className,
         )}
         {...props}

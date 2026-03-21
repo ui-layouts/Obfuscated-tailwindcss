@@ -1,17 +1,17 @@
-import { highlightCode } from '@/lib/shiki-highlighter';
-import { cn } from '@/lib/utils';
+import { highlightCode } from "@/lib/shiki-highlighter";
+import { cn } from "@/lib/utils";
 
-import { CopyButton } from './copy-button';
-import { CopyNpmCommandButton } from './copy-npm-button';
+import { CopyButton } from "./copy-button";
+import { CopyNpmCommandButton } from "./copy-npm-button";
 
 const codeShellClassName =
-  'not-prose overflow-x-auto rounded-2xl border border-slate-200 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-950/95';
+  "not-prose overflow-x-auto rounded-2xl border border-border bg-background/95 shadow-sm dark:border-border dark:bg-background/95";
 
 const codeHeaderClassName =
-  'flex items-center justify-between gap-3 border-b border-slate-200/80 px-4 py-3 dark:border-slate-800/80';
+  "flex items-center justify-between gap-3 border-b border-border/80 px-4 py-3 dark:border-border/80";
 
 const codeBodyClassName =
-  '[&_pre]:m-0 [&_pre]:max-h-[550px] [&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-4 [&_code]:font-mono [&_code]:text-[13px] [&_code]:leading-6';
+  "[&_pre]:m-0 [&_pre]:max-h-[550px] [&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-4 [&_code]:font-mono [&_code]:text-[13px] [&_code]:leading-6";
 
 export async function PreCode({
   codeblock,
@@ -25,28 +25,29 @@ export async function PreCode({
   metahide?: boolean;
 }) {
   const { value, lang, meta } = codeblock;
-  const normalizedLang = lang || 'txt';
+  const normalizedLang = lang || "txt";
   const highlightedHtml = await highlightCode(value, normalizedLang);
   const isPackageInstallCommand = /^npm\s+(install|i)\b/.test(value.trim());
-  const label = normalizedLang === 'bash' ? 'Terminal' : normalizedLang.toUpperCase();
+  const label =
+    normalizedLang === "bash" ? "Terminal" : normalizedLang.toUpperCase();
 
   return (
-    <div className={cn('relative my-5', classname, cssclass)}>
+    <div className={cn("relative my-5", classname, cssclass)}>
       {!metahide && meta && (
-        <div className='mb-2 inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium tracking-wide text-slate-600 uppercase dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'>
+        <div className="mb-2 inline-flex rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
           {meta}
         </div>
       )}
 
       <div className={codeShellClassName}>
         <div className={codeHeaderClassName}>
-          <div className='flex items-center gap-3'>
-            <div className='flex items-center gap-1.5'>
-              <span className='h-2.5 w-2.5 rounded-full bg-rose-400/90' />
-              <span className='h-2.5 w-2.5 rounded-full bg-amber-400/90' />
-              <span className='h-2.5 w-2.5 rounded-full bg-emerald-400/90' />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-chart-1" />
+              <span className="h-2.5 w-2.5 rounded-full bg-chart-2" />
+              <span className="h-2.5 w-2.5 rounded-full bg-chart-3" />
             </div>
-            <span className='text-xs font-semibold tracking-[0.18em] text-slate-500 uppercase dark:text-slate-400'>
+            <span className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
               {label}
             </span>
           </div>
@@ -54,12 +55,12 @@ export async function PreCode({
           {isPackageInstallCommand ? (
             <CopyNpmCommandButton
               code={value}
-              classname='static border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900'
+              classname="static border-border bg-muted dark:border-border dark:bg-muted"
             />
           ) : (
             <CopyButton
               code={value}
-              classname='static border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900'
+              classname="static border-border bg-muted dark:border-border dark:bg-muted"
             />
           )}
         </div>

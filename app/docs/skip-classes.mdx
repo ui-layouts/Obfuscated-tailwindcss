@@ -1,0 +1,343 @@
+export const metadata = {
+  metadataBase: new URL("https://ui-layouts.com"),
+
+title: "Skipping Tailwind Classes | Obfus-Tail",
+description:
+"Learn how to bypass class obfuscation with custom CSS classes and semantic naming strategies",
+keywords: [
+"Obfus-Tail skipping tailwind classes",
+"React components setup",
+"Next.js Tailwind guide",
+"Install UI components",
+"Obfus-Tail documentation",
+"How to use Obfus-Tail",
+"Component library setup",
+"React UI getting started",
+"TailwindCSS component guide",
+"Next.js UI tutorial",
+],
+};
+
+# Skipping Tailwind Classes
+
+Sometimes you need to bypass the obfuscation system for specific styles. Here are several strategies to maintain control over your CSS while still benefiting from the obfuscation workflow.
+
+## Why Skip Classes?
+
+There are several valid reasons to skip Tailwind class obfuscation:
+
+- **Critical styling** - Elements that must maintain exact appearance
+- **Third-party components** - External libraries with their own styling
+- **Dynamic classes** - Classes generated at runtime
+- **Brand colors** - Specific brand colors that shouldn't change
+- **Animation classes** - Complex animations that might break
+- **Utility overrides** - One-off styles for specific components
+
+## Strategy 1: Custom CSS Classes
+
+Create custom CSS classes and apply them directly:
+
+### Define Custom Classes
+
+```css
+/* In your token.css or separate CSS file */
+.brand-button {
+  @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors;
+}
+
+.special-card {
+  @apply bg-white border border-gray-200 rounded-xl shadow-lg p-6;
+}
+
+.critical-text {
+  @apply text-red-600 font-bold;
+}
+```
+
+### Use in Components
+
+```tsx
+// This class won't be obfuscated
+<button className="brand-button">
+  Click Me
+</button>
+
+// This card maintains its original styling
+<div className="special-card">
+  <h3 className="text-xl font-bold mb-2">Card Title</h3>
+  <p className="text-gray-600">Card content here</p>
+</div>
+
+// Critical error message
+<p className="critical-text">Error: Something went wrong</p>
+```
+
+## Strategy 2: Semantic Class Names
+
+Use semantic class names that describe purpose rather than appearance:
+
+```tsx
+// Instead of this (will be obfuscated)
+<div className="bg-red-100 border-red-300 text-red-800 p-4 rounded-lg">
+  <h2 className="text-lg font-bold text-red-900">Error State</h2>
+  <p className="text-red-700">Something went wrong</p>
+</div>
+
+// Use semantic classes (configurable)
+<div className="error-container">
+  <h2 className="error-title">Error State</h2>
+  <p className="error-message">Something went wrong</p>
+</div>
+```
+
+## Strategy 3: CSS Custom Properties
+
+Use CSS custom properties for theming:
+
+```tsx
+// Define in your CSS
+:root {
+  --brand-primary: 220 38 38;
+  --brand-secondary: 229 231 232;
+  --error-bg: 254 242 242;
+  --error-text: 220 38 38;
+}
+
+// Use in components
+<div className="error-message">
+  Error message with themed colors
+</div>
+
+<style jsx>{`
+  .error-message {
+    background-color: rgb(var(--error-bg));
+    color: rgb(var(--error-text));
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+`}</style>
+```
+
+## Strategy 4: Inline Styles
+
+For truly one-off styles, use inline styles:
+
+```tsx
+<div
+  style={{
+    backgroundColor: "#f3f4f6",
+    border: "1px solid #e5e7eb",
+    borderRadius: "8px",
+    padding: "16px",
+  }}
+>
+  This div won't be obfuscated
+</div>
+```
+
+## Strategy 5: CSS Modules
+
+Use CSS modules for component-scoped styles:
+
+```tsx
+// styles.module.css
+.customComponent {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+// Component
+import styles from './styles.module.css';
+
+<div className={styles.customComponent}>
+  Scoped styles that bypass obfuscation
+</div>
+```
+
+## Configuring Obfuscation to Skip Classes
+
+### Method 1: Exclude Patterns
+
+Update your obfuscation script to exclude certain patterns:
+
+```javascript
+// In obfuscate-tailwind.js
+const excludePatterns = [
+  "brand-",
+  "critical-",
+  "error-",
+  "warning-",
+  "success-",
+  "custom-",
+];
+
+// Skip classes matching these patterns
+if (excludePatterns.some((pattern) => className.includes(pattern))) {
+  return className; // Don't obfuscate
+}
+```
+
+### Method 2: Include Whitelist
+
+Only obfuscate specific class prefixes:
+
+```javascript
+const includeOnly = ["bg-", "text-", "p-", "m-", "flex", "grid", "border"];
+
+// Only obfuscate classes starting with these prefixes
+if (includeOnly.some((prefix) => className.startsWith(prefix))) {
+  return obfuscate(className);
+}
+
+return className; // Return unchanged for others
+```
+
+### Method 3: File Exclusions
+
+Exclude entire files or directories:
+
+```javascript
+const excludeFiles = [
+  "components/brand/",
+  "styles/critical.css",
+  "lib/third-party/",
+  "assets/vendor/",
+];
+
+// Skip processing these files entirely
+if (excludeFiles.some((file) => filePath.includes(file))) {
+  return content; // Return unchanged content
+}
+```
+
+## Best Practices
+
+### DO ✅
+
+- **Document exceptions** - Keep a list of why certain classes are skipped
+- **Use semantic naming** - `error-container` vs `red-box`
+- **Version control** - Commit custom styles separately from obfuscated builds
+- **Test thoroughly** - Ensure custom styles work with obfuscated classes
+- **Maintain consistency** - Use the same strategy across your project
+
+### DON'T ❌
+
+- **Mix strategies** - Don't use multiple approaches in the same component
+- **Overuse inline styles** - They're hard to maintain
+- **Forget performance** - Custom CSS still needs optimization
+- **Ignore accessibility** - Custom styles must still be accessible
+- **Break naming conventions** - Keep class names meaningful
+
+## Example: Hybrid Approach
+
+Here's a real-world example combining obfuscated and custom classes:
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export function HeroSection() {
+  return (
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      {/* Obfuscated Tailwind classes for layout */}
+      <div className="flex flex-col items-center justify-center text-center">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Welcome to Our App
+        </h1>
+
+        {/* Custom class for brand button */}
+        <Button className="brand-button">Get Started</Button>
+
+        {/* Semantic class for error state */}
+        {error && (
+          <div className="error-container">
+            <p className="error-message">{error}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+## Performance Considerations
+
+### CSS Bundle Size
+
+Custom classes add to your bundle size:
+
+- **Minimal impact** - A few custom classes are negligible
+- **Reuse styles** - Apply the same custom class multiple times
+- **Optimize CSS** - Remove unused custom styles
+- **Minify output** - Use CSS minification in production
+
+### Maintainability
+
+- **Centralize custom styles** - Keep them in dedicated files
+- **Document patterns** - Explain why and how you skip classes
+- **Team alignment** - Ensure everyone follows the same conventions
+- **Regular audits** - Review which custom classes are still needed
+
+## Advanced Techniques
+
+### CSS-in-JS Libraries
+
+Consider libraries like:
+
+- **Styled Components** - CSS-in-JS with theming
+- **Emotion** - High-performance CSS-in-JS
+- **Framer Motion** - Animation-focused styling
+- **Linaria** - Accessibility-focused styling
+
+### CSS Architecture
+
+Plan your custom CSS architecture:
+
+```
+styles/
+├── globals.css          # Global custom styles
+├── components/          # Component-specific styles
+│   ├── brand.css
+│   ├── errors.css
+│   └── animations.css
+├── themes/             # Theme variables
+│   ├── light.css
+│   └── dark.css
+└── utilities/           # Custom utility classes
+    ├── spacing.css
+    └── typography.css
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Custom styles not applying:**
+
+1. Check CSS import order
+2. Verify class name spelling
+3. Ensure CSS specificity
+4. Test in different browsers
+
+**Obfuscation breaking styles:**
+
+1. Review exclude patterns
+2. Check for naming conflicts
+3. Verify CSS cascade order
+4. Test with different content
+
+### Debug Tools
+
+Use browser dev tools to:
+
+- **Inspect elements** - See which classes are applied
+- **Check computed styles** - Verify final appearance
+- **Monitor network** - Ensure CSS files load correctly
+- **Profile performance** - Measure rendering impact
+
+## Conclusion
+
+Skipping Tailwind class obfuscation is sometimes necessary for maintaining design consistency and functionality. The key is to be intentional, document your decisions, and use a consistent approach that balances the benefits of obfuscation with the need for custom styling.
+
+Remember: The goal is **controlled exceptions**, not random bypasses. Every skipped class should have a clear reason and be part of a documented strategy.
