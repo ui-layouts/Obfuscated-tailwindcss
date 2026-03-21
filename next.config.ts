@@ -1,23 +1,21 @@
-import type { NextConfig } from "next";
-import withMDX from "@next/mdx";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-
-const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   experimental: {
-    mdxRs: false,
+    mdxRs: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
   },
 };
 
-export default withMDX({
-  ...nextConfig,
-  options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [rehypeSlug],
-    jsx: true,
-  },
-});
+export default nextConfig;
