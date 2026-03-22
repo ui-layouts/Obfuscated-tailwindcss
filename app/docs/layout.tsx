@@ -34,20 +34,20 @@ export default function DocsLayout({
               </span>
             </a>
             <nav className="flex gap-6">
-              <a 
-                href="/docs/getting-started" 
+              <a
+                href="/docs/getting-started"
                 className="text-gray-600 hover:text-gray-900 font-medium"
               >
                 Getting Started
               </a>
-              <a 
-                href="/docs/examples" 
+              <a
+                href="/docs/token-setup"
                 className="text-gray-600 hover:text-gray-900 font-medium"
               >
-                Examples
+                Token Setup
               </a>
-              <a 
-                href="/" 
+              <a
+                href="/"
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 Back to Home
@@ -56,7 +56,7 @@ export default function DocsLayout({
           </div>
         </div>
       </header>
-      
+
       <main className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1">
@@ -64,24 +64,28 @@ export default function DocsLayout({
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
                 Documentation
               </h3>
-              <a 
-                href="/docs/getting-started" 
+              <a
+                href="/docs/getting-started"
                 className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
               >
                 Getting Started
               </a>
-              <a 
-                href="/docs/examples" 
+              <a
+                href="/docs/setup-script"
                 className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
               >
-                Interactive Examples
+                Setup Script
+              </a>
+              <a
+                href="/docs/skip-classes"
+                className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
+              >
+                Skip Classes
               </a>
             </nav>
           </aside>
-          
-          <div className="lg:col-span-3">
-            {children}
-          </div>
+
+          <div className="lg:col-span-3">{children}</div>
         </div>
       </main>
     </div>

@@ -1,119 +1,91 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import type { ReactNode } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { highlightCode } from '@/lib/shiki-highlighter';
+
 import { CopyButton } from './copy-button';
 
-export default async function CodeWithTabs({ children }: any) {
-  // console.log('children', children);
-
-  const blocks = Array.isArray(children) ? children : [children];
-  // console.log('blocks', blocks);
-
-  // Extract raw code + language
-  const parsed = blocks
-    // .filter((n: any) => n?.type === 'pre')
-    .map((node: any) => {
-      const codeNode = node.props.children;
-      return {
-        value: codeNode.props.children || '',
-        lang: codeNode.props.className?.replace('language-', '') || 'txt',
+type CodeBlockNode = {
+  props?: {
+    children?: {
+      props?: {
+        children?: string;
+        className?: string;
       };
-    });
+    };
+  };
+};
 
-  // console.log('parsed', parsed);
+export default async function CodeWithTabs({ children }: { children: ReactNode }) {
+  const blocks = Array.isArray(children) ? children : [children];
+  const parsed = (blocks as CodeBlockNode[]).map((node) => {
+    const codeNode = node?.props?.children?.props;
 
-  // Highlight everything
+    return {
+      value: codeNode?.children || '',
+      lang: codeNode?.className?.replace('language-', '') || 'txt',
+    };
+  });
+
   const highlighted = await Promise.all(
-    parsed.map((t) => highlightCode(t.value, t.lang))
+    parsed.map(({ value, lang }) => highlightCode(value, lang))
   );
 
-  // -------------------------
-  // CASE 1 — Only one block
-  // -------------------------
   if (parsed.length === 1) {
     return (
-      <div
-        className='rounded bg-zinc-900 p-4'
-        dangerouslySetInnerHTML={{ __html: highlighted[0] }}
-      />
+      <div className='relative my-5 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-950/95'>
+        <div className='flex items-center justify-between border-b border-slate-200/80 px-4 py-3 dark:border-slate-800/80'>
+          <span className='text-xs font-semibold tracking-[0.18em] text-slate-500 uppercase dark:text-slate-400'>
+            {parsed[0].lang}
+          </span>
+          <CopyButton
+            code={parsed[0].value}
+            classname='static border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900'
+          />
+        </div>
+        <div
+          className='[&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-4 [&_code]:font-mono [&_code]:text-[13px] [&_code]:leading-6'
+          dangerouslySetInnerHTML={{ __html: highlighted[0] }}
+        />
+      </div>
     );
   }
 
-  // -------------------------
-  // CASE 2 — Always two blocks → fixed tabs
-  // -------------------------
-  const tabs = [
-    { meta: 'ui-layouts', html: highlighted[0], code: parsed[0].value },
-    { meta: 'shadcn', html: highlighted[1], code: parsed[1].value },
-  ];
+  const tabs = parsed.map((tab, index) => ({
+    value: `snippet-${index + 1}`,
+    label: tab.lang.toUpperCase(),
+    html: highlighted[index],
+    code: tab.value,
+  }));
 
   return (
     <Tabs
-      defaultValue='ui-layouts'
-      className='rounded-xl bg-codebg dark:border-neutral-800 backdrop-blur-md border relative p-1 my-5'
+      defaultValue={tabs[0].value}
+      className='my-5 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-950/95'
     >
-      <TabsList className='rounded-lg mt-1 mx-1 dark:bg-transparent bg-transparent border-0'>
-        {tabs.map((tab) => (
-          <TabsTrigger
-            key={tab.meta}
-            value={tab.meta}
-            className='data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 gap-1 data-[state=active]:border'
-          >
-            {tab.meta === 'ui-layouts' ? (
-              <>
-                <svg
-                  width='238'
-                  height='264'
-                  viewBox='0 0 238 264'
-                  fill='none'
-                  className='size-4'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M130 0C146.292 0 159.5 13.2076 159.5 29.5V39.5C159.5 55.2401 172.26 68 188 68H208C224.292 68 237.5 81.2076 237.5 97.5V234.5C237.5 250.792 224.292 264 208 264H105C88.7076 264 75.5 250.792 75.5 234.5V226.5C75.5 210.76 62.7401 198 47 198H29.5C13.2076 198 0 184.792 0 168.5V29.5C0 13.2076 13.2076 0 29.5 0H130ZM86 78C81.5817 78 78 81.5817 78 86V191C78 195.418 81.5817 199 86 199H158C162.418 199 166 195.418 166 191V86C166 81.5817 162.418 78 158 78H86Z'
-                    fill='currentColor'
-                  />
-                </svg>
-                ui-layouts
-              </>
-            ) : (
-              <>
-                <svg viewBox='0 0 256 256' className='size-4' fill='none'>
-                  <line
-                    x1='208'
-                    y1='128'
-                    x2='128'
-                    y2='208'
-                    stroke='currentColor'
-                    strokeWidth='32'
-                  />
-                  <line
-                    x1='192'
-                    y1='40'
-                    x2='40'
-                    y2='192'
-                    stroke='currentColor'
-                    strokeWidth='32'
-                  />
-                </svg>
-                shadcn
-              </>
-            )}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className='flex flex-col gap-3 border-b border-slate-200/80 px-4 py-3 md:flex-row md:items-center md:justify-between dark:border-slate-800/80'>
+        <TabsList className='h-auto rounded-xl bg-slate-100 p-1 dark:bg-slate-900'>
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className='min-w-20 rounded-lg px-3 py-1.5 text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase data-active:bg-white data-active:text-slate-900 dark:text-slate-400 dark:data-active:bg-slate-950 dark:data-active:text-slate-100'
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
 
       {tabs.map((tab) => (
-        <TabsContent
-          key={tab.meta}
-          value={tab.meta}
-          className='mt-1 border-none'
-        >
-          <CopyButton
-            code={tab.code}
-            classname='top-1.5 border bg-white absolute right-3'
-          />
+        <TabsContent key={tab.value} value={tab.value} className='m-0'>
+          <div className='flex justify-end px-4 pt-3'>
+            <CopyButton
+              code={tab.code}
+              classname='static border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900'
+            />
+          </div>
           <div
-            className='cliblocks rounded-xl p-1 px-2 border-none'
+            className='[&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-4 [&_code]:font-mono [&_code]:text-[13px] [&_code]:leading-6'
             dangerouslySetInnerHTML={{ __html: tab.html }}
           />
         </TabsContent>
