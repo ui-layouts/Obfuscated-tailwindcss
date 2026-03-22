@@ -1,69 +1,150 @@
 import { notFound } from "next/navigation";
-import type { ComponentType } from "react";
-import GettingStartedDoc from "../getting-started.mdx";
-import SetupScriptDoc from "../setup-script.mdx";
-import SkipClassesDoc from "../skip-classes.mdx";
+import { Metadata } from "next";
+import { getDocBySlug, getAllDocs } from "@/lib/docs";
+import { absoluteUrl, cn } from "@/lib/utils";
+import { Component } from "lucide-react";
+import TableOfContents from "@/components/table-of-contents";
+// import { ComponentPagination } from '@/components/website/code-components/pagination';
+import Footer from "@/components/footer";
+import CopyPage from "@/components/copy-page";
 
-type DocModule = {
-  title: string;
-  description: string;
-  Component: ComponentType;
-};
+export const dynamic = "force-static";
+export const dynamicParams = false;
 
-const docs: Record<string, DocModule> = {
-  "getting-started": {
-    title: "Getting Started",
-    description:
-      "Install the obfuscation script, wire up token.css, and generate production-ready obfuscated Tailwind styles.",
-    Component: GettingStartedDoc,
-  },
-  "setup-script": {
-    title: "Setup Script",
-    description: "Simple 3-step setup for Tailwind class obfuscation",
-    Component: SetupScriptDoc,
-  },
-  "skip-classes": {
-    title: "Skipping Tailwind Classes",
-    description:
-      "Learn how to bypass class obfuscation with custom CSS classes and semantic naming strategies.",
-    Component: SkipClassesDoc,
-  },
-};
-
-export function generateStaticParams() {
-  return Object.keys(docs).map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  const docs = await getAllDocs();
+  return docs.map((doc) => ({
+    slug: doc.slug === "index" ? [] : doc.slug.split("/"),
+  }));
 }
 
-export default async function DocPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+
+  const slug = params.slug || "";
+
+  // @ts-ignore
+  const doc = await getDocBySlug(slug);
+  if (!doc?.content?.metadata) return {};
+
+  const md = doc.content.metadata;
+
+  const title =
+    typeof md.title === "string"
+      ? md.title
+      : ((md.title as any)?.absolute ??
+        (md.title as any)?.default ??
+        "UI Layouts");
+
+  const description = md.description ?? "";
+
+  return {
+    // Core
+    metadataBase: md.metadataBase,
+    title: title.includes("| UI Layouts") ? title : `${title} | UI Layouts`,
+    description,
+
+    // Keywords (still useful for Bing + some SEO tools)
+    keywords: md.keywords ?? [],
+
+    // Authors / branding
+    authors: md.authors,
+    creator: md.creator ?? "@naymur_dev",
+    publisher: md.publisher ?? "UI Layouts",
+    category: md.category ?? "technology",
+
+    // Open Graph (VERY important)
+    openGraph: {
+      ...(md.openGraph ?? {}),
+      title:
+        md.openGraph?.title ??
+        (title.includes("| UI Layouts") ? title : `${title} | UI Layouts`),
+      description: md.openGraph?.description ?? description,
+      url: md.openGraph?.url ?? absoluteUrl(doc.slug),
+      images: md.openGraph?.images ?? [
+        {
+          url: "https://ui-layouts.com/component-og.jpg",
+          width: 1200,
+          height: 630,
+          alt: "UI Layouts Components",
+        },
+      ],
+      siteName: md.openGraph?.siteName ?? "UI Layouts",
+      locale: md.openGraph?.locale ?? "en_US",
+      type: md.openGraph?.type ?? "website",
+    },
+
+    // Twitter
+    twitter: {
+      ...(md.twitter ?? {}),
+      card: md.twitter?.card ?? "summary_large_image",
+      title:
+        md.twitter?.title ??
+        (title.includes("| UI Layouts") ? title : `${title} | UI Layouts`),
+      description: md.twitter?.description ?? description,
+      images: md.twitter?.images ?? ["https://ui-layouts.com/component-og.jpg"],
+      creator: md.twitter?.creator ?? "@naymur_dev",
+    },
+
+    // Robots (Google uses this heavily)
+    robots: {
+      index: true,
+      follow: true,
+      ...md.robots,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        ...md.robots?.googleBot,
+      },
+    },
+  };
+}
+
+export default async function DocPage(props: {
+  params: Promise<{ slug?: string[] }>;
 }) {
-  const { slug } = await params;
-  const doc = docs[slug];
+  const params = await props.params;
+  console.log("params", params);
+  const slug = params.slug || "";
+  // @ts-ignore
+  const doc = await getDocBySlug(slug);
 
-  if (!doc) {
-    notFound();
-  }
+  if (!doc) notFound();
 
-  const DocContent = doc.Component;
+  const { default: Content } = doc.content;
 
   return (
-    <article className="mx-auto max-w-4xl px-6 py-12">
-      <div className="mb-10 border-b border-gray-200 pb-6">
-        <a
-          href="/"
-          className="mb-6 inline-flex items-center gap-2 text-blue-600 hover:text-blue-700"
-        >
-          ← Back to Home
-        </a>
-        <h1 className="mb-3 text-4xl font-bold text-gray-900">{doc.title}</h1>
-        <p className="text-lg text-gray-600">{doc.description}</p>
-      </div>
-
-      <div className="prose max-w-none pb-5 prose-h1:text-2xl prose-h1:font-semibold prose-h1:mb-4 prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-medium prose-strong:font-medium prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4 prose-li:mb-1 prose-blockquote:mb-4 prose-table:mb-4 prose-pre:mb-4">
-        <DocContent />
-      </div>
-    </article>
+    <>
+      <section className="w-full max-w-none prose pb-5 prose-h1:text-2xl prose-h1:font-semibold prose-h1:mb-4 prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-medium prose-strong:font-medium prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4 prose-li:mb-1 prose-blockquote:mb-4 prose-table:mb-4 prose-pre:mb-4">
+        <article className="mb-4 mt-4 not-prose">
+          <div className="space-y-2 rounded-md text-black">
+            <div className="flex items-center gap-2 justify-between">
+              <h1
+                className={cn(
+                  "mb-0 flex scroll-m-20 items-center lg:text-3xl text-2xl gap-2 font-medium tracking-tight",
+                )}
+              >
+                <div className="lg:w-9 w-8 lg:h-9 h-8 bg-primary grid place-content-center text-primary-foreground rounded-lg">
+                  <Component size={20} />
+                </div>
+                {doc.content.metadata.title}
+              </h1>
+              <CopyPage />
+            </div>
+            <p className="sm:text-sm text-xs pt-2">
+              {doc.content.metadata.description}
+            </p>
+          </div>
+        </article>
+        <Content />
+        {/* <ComponentPagination doc={doc} /> */}
+      </section>
+      <Footer />
+    </>
   );
 }

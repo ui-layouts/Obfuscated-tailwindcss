@@ -45,13 +45,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       className,
       ...props
     }: React.HTMLAttributes<HTMLParagraphElement>) => (
-      <p className={cn("leading-7 pt-3 pb-2 m-0", className)} {...props} />
+      <p className={cn("m-0", className)} {...props} />
     ),
     span: ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-      <span className={cn("leading-7 pt-3 pb-2 m-0", className)} {...props} />
+      <span className={cn("m-0", className)} {...props} />
     ),
     h1: ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-      <span className={cn("leading-7 pt-3 pb-2 m-0", className)} {...props} />
+      <span className={cn("m-0", className)} {...props} />
     ),
     div: ({
       className,

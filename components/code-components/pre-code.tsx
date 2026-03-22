@@ -8,7 +8,7 @@ const codeShellClassName =
   "not-prose overflow-x-auto rounded-2xl border border-border bg-background/95 shadow-sm dark:border-border dark:bg-background/95";
 
 const codeHeaderClassName =
-  "flex items-center justify-between gap-3 border-b border-border/80 px-4 py-3 dark:border-border/80";
+  "flex items-center justify-between gap-3 border-b border-border/80 px-4 py-1 dark:border-border/80";
 
 const codeBodyClassName =
   "[&_pre]:m-0 [&_pre]:max-h-[550px] [&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-4 [&_code]:font-mono [&_code]:text-[13px] [&_code]:leading-6";
@@ -32,7 +32,7 @@ export async function PreCode({
     normalizedLang === "bash" ? "Terminal" : normalizedLang.toUpperCase();
 
   return (
-    <div className={cn("relative my-5", classname, cssclass)}>
+    <div className={cn("relative not-prose", classname, cssclass)}>
       {!metahide && meta && (
         <div className="mb-2 inline-flex rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
           {meta}

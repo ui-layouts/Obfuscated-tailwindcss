@@ -1,0 +1,210 @@
+export const metadata = {
+  metadataBase: new URL("https://ui-layouts.com"),
+  title: "Skipping Tailwind Classes",
+  description:
+    "Learn how to bypass class obfuscation with custom CSS classes and semantic naming strategies",
+  keywords: [
+    "Obfus-Tail skipping tailwind classes",
+    "React components setup",
+    "Next.js Tailwind guide",
+    "Install UI components",
+    "Obfus-Tail documentation",
+    "How to use Obfus-Tail",
+    "Component library setup",
+    "React UI getting started",
+    "TailwindCSS component guide",
+    "Next.js UI tutorial",
+  ],
+};
+
+## Why Skip Classes?
+
+There are several valid reasons to skip Tailwind class obfuscation:
+
+- **Critical styling** - Elements that must maintain exact appearance
+- **Third-party components** - External libraries with their own styling
+- **Dynamic classes** - Classes generated at runtime
+- **Brand colors** - Specific brand colors that shouldn't change
+- **Animation classes** - Complex animations that might break
+- **Utility overrides** - One-off styles for specific components
+
+### Method 1: Custom Classes (Never Obfuscated)
+
+These are your own custom CSS classes that should never be obfuscated:
+
+```tsx
+const CUSTOM_CLASSES = [
+  "container-wrapper",
+  "container",
+  "slider_content",
+  "prose",
+  "rainbow-banner-gradient-1",
+  "rainbow-banner-gradient-2",
+  "cpu-architecture",
+  "cpu-line-1",
+  "cpu-line-2",
+  "cpu-line-3",
+  "cpu-line-4",
+  "cpu-line-5",
+  "group",
+  "peer",
+  "cpu-line-6",
+  "cpu-line-7",
+  "cpu-line-8",
+  "spotlight-main",
+  "spotlight-shadow",
+  "spotlight-elipse",
+  "spotlight-base",
+  "spotlight-fade",
+  "spotlight-left",
+  "spotlight-right",
+  "glass-button",
+  "glass-btn",
+  "gradient-wrapper",
+  "mdxcard",
+  "animated-btn",
+  "blur-vignette",
+  "animated-text",
+  "scrollbar-none",
+  "shiki",
+  "dark",
+];
+
+// Skip all custom classes
+if (CUSTOM_CLASSES.includes(className)) {
+  return className; // Don't obfuscate custom classes
+}
+```
+
+### Method 2: Skip Classes (Problematic Tailwind Classes)
+
+These Tailwind classes should be skipped due to compatibility or styling issues:
+
+```tsx
+const SKIP_CLASSES = [
+  "bg-opacity-20",
+  "bg-opacity-40",
+  "bg-opacity-50",
+  "bg-opacity-60",
+  "bg-opacity-80",
+  "bg-opacity-100",
+  "bg-blue",
+  "text-pirmary", // Note: typo in original class name
+  "rounded-rt-lg",
+  "group",
+  "peer",
+  "group-hover",
+  "group-focus",
+];
+
+// Skip problematic Tailwind classes
+if (SKIP_CLASSES.includes(className)) {
+  return className; // Don't obfuscate skip classes
+}
+```
+
+### Method 3: Complete Implementation
+
+Here's how to implement both custom and skip classes in your obfuscation script:
+
+```jsx
+// scripts/obfuscate-tailwind.js
+
+const CUSTOM_CLASSES = [
+  "container-wrapper",
+  "container",
+  "slider_content",
+  "prose",
+  "rainbow-banner-gradient-1",
+  "rainbow-banner-gradient-2",
+  "cpu-architecture",
+  "cpu-line-1",
+  "cpu-line-2",
+  "cpu-line-3",
+  "cpu-line-4",
+  "cpu-line-5",
+  "group",
+  "peer",
+  "cpu-line-6",
+  "cpu-line-7",
+  "cpu-line-8",
+  "spotlight-main",
+  "spotlight-shadow",
+  "spotlight-elipse",
+  "spotlight-base",
+  "spotlight-fade",
+  "spotlight-left",
+  "spotlight-right",
+  "glass-button",
+  "glass-btn",
+  "gradient-wrapper",
+  "mdxcard",
+  "animated-btn",
+  "blur-vignette",
+  "animated-text",
+  "scrollbar-none",
+  "shiki",
+  "dark",
+];
+
+const SKIP_CLASSES = [
+  "bg-opacity-20",
+  "bg-opacity-40",
+  "bg-opacity-50",
+  "bg-opacity-60",
+  "bg-opacity-80",
+  "bg-opacity-100",
+  "bg-blue",
+  "text-pirmary",
+  "rounded-rt-lg",
+  "group",
+  "peer",
+  "group-hover",
+  "group-focus",
+];
+
+function shouldSkipClass(className) {
+  // Skip custom classes (your own CSS)
+  if (CUSTOM_CLASSES.includes(className)) {
+    return true;
+  }
+
+  // Skip problematic Tailwind classes
+  if (SKIP_CLASSES.includes(className)) {
+    return true;
+  }
+
+  return false;
+}
+
+// Usage in your obfuscation function
+function processClasses(classString) {
+  return classString
+    .split(" ")
+    .map((className) => {
+      if (shouldSkipClass(className)) {
+        return className; // Keep original
+      }
+      return obfuscateClass(className); // Obfuscate others
+    })
+    .join(" ");
+}
+```
+
+## Best Practices
+
+### DO ✅
+
+- **Document exceptions** - Keep a list of why certain classes are skipped
+- **Use semantic naming** - `error-container` vs `red-box`
+- **Version control** - Commit custom styles separately from obfuscated builds
+- **Test thoroughly** - Ensure custom styles work with obfuscated classes
+- **Maintain consistency** - Use the same strategy across your project
+
+### DON'T ❌
+
+- **Mix strategies** - Don't use multiple approaches in the same component
+- **Overuse inline styles** - They're hard to maintain
+- **Forget performance** - Custom CSS still needs optimization
+- **Ignore accessibility** - Custom styles must still be accessible
+- **Break naming conventions** - Keep class names meaningful

@@ -1,0 +1,245 @@
+export const metadata = {
+  metadataBase: new URL("https://ui-layouts.com"),
+  title: "Getting Started",
+  description:
+    "Complete setup guide for Tailwind class obfuscation with script, build configuration, and token setup",
+  keywords: [
+    "Obfus-Tail getting started",
+    "React components setup",
+    "Next.js Tailwind guide",
+    "Install UI components",
+    "Obfus-Tail documentation",
+    "How to use Obfus-Tail",
+    "Component library setup",
+  ],
+};
+
+import { TableOfContents } from "@/components/table-of-contents";
+
+## Install Required Packages
+
+First, install the necessary packages for your Tailwind setup:
+
+```bash
+npm install tailwindcss postcss autoprefixer
+npm install -D @tailwindcss/typography
+```
+
+## Create Obfuscation Script
+
+Create `scripts/obfuscate-tailwind.js`:
+
+```tsx
+const fs = require("fs");
+const path = require("path");
+
+// Configuration
+const config = {
+  sourceDir: "./app",
+  outputFile: "./app/obfuscated-styles.css",
+  mapFilePath: ".obfuscation-map.json",
+  randomNameLength: 8,
+};
+
+// Simple class obfuscator
+function obfuscateClass(className) {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < config.randomNameLength; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+// Process files
+function processFiles() {
+  const classMap = {};
+  let css = '@import "tailwindcss";\n';
+
+  // Add token reference if exists
+  if (fs.existsSync("./app/token.css")) {
+    css += '@import "./token.css";\n';
+  }
+  css += "\n";
+
+  // Find all TSX/JSX files
+  function findFiles(dir) {
+    const files = [];
+    const items = fs.readdirSync(dir);
+
+    for (const item of items) {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+
+      if (
+        stat.isDirectory() &&
+        !item.startsWith(".") &&
+        item !== "node_modules"
+      ) {
+        files.push(...findFiles(fullPath));
+      } else if (item.match(/\.(tsx|jsx|ts|js)$/)) {
+        files.push(fullPath);
+      }
+    }
+    return files;
+  }
+
+  const files = findFiles(config.sourceDir);
+
+  // Process each file
+  for (const filePath of files) {
+    let content = fs.readFileSync(filePath, "utf8");
+
+    // Find all className attributes
+    const classRegex = /className\s*=\s*["']([^"']+)["']/g;
+    let match;
+
+    while ((match = classRegex.exec(content)) !== null) {
+      const originalClasses = match[1];
+      const obfuscatedClasses = [];
+
+      for (const className of originalClasses.split(" ")) {
+        if (className && !classMap[className]) {
+          const obfuscated = obfuscateClass(className);
+          classMap[className] = obfuscated;
+
+          // Generate CSS for this class
+          css += `.${obfuscated} {\n`;
+          css += `  @apply ${className};\n`;
+          css += `}\n\n`;
+        }
+
+        if (classMap[className]) {
+          obfuscatedClasses.push(classMap[className]);
+        }
+      }
+
+      // Replace in content
+      content = content.replace(
+        match[0],
+        `className="${obfuscatedClasses.join(" ")}"`,
+      );
+    }
+
+    // Write back file
+    fs.writeFileSync(filePath, content);
+  }
+
+  // Write CSS file
+  fs.writeFileSync(config.outputFile, css);
+
+  // Write map file
+  fs.writeFileSync(config.mapFilePath, JSON.stringify(classMap, null, 2));
+
+  console.log(`✅ Processed ${files.length} files`);
+  console.log(`📄 Generated ${config.outputFile}`);
+  console.log(`🗺️  Saved class map to ${config.mapFilePath}`);
+}
+
+// Run the script
+processFiles();
+```
+
+## Update Build Script
+
+Add the obfuscation step to your `package.json` scripts:
+
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/obfuscate-tailwind.js && next build",
+    "start": "next start",
+    "lint": "eslint"
+  }
+}
+```
+
+The build process will now:
+
+1. Run the obfuscation script first
+2. Generate the obfuscated CSS file
+3. Then run the Next.js build
+
+## Import Generated CSS
+
+After the script runs, it will generate `app/obfuscated-styles.css`. Import this in your `app/layout.tsx`:
+
+```tsx
+import "./obfuscated-styles.css";
+import "./globals.css";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+## Create Token File
+
+Create `app/token.css` for your theme variables:
+
+```css
+/* Theme variables */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.456 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+}
+```
+
+## Import Token in Globals
+
+Add the token import to your `app/globals.css`:
+
+```css
+@import "tailwindcss";
+@import "./token.css";
+```
+
+## That's It! 🎉
+
+Your setup is now complete. Run the build:
+
+```bash
+npm run build
+```
+
+The script will:
+
+- Find all `className` attributes in your files
+- Generate random obfuscated class names
+- Create a CSS file with `@apply` rules
+- Update your files with the new class names
+
+**Next:** Learn [how it works](/docs/how-it-works) with detailed examples.
+
+## Output Files
+
+After a successful build, you should see:
+
+- `app/obfuscated-styles.css`
+- `.obfuscation-map.json`
+
+These are generated files and should reflect the current classes found in your project.

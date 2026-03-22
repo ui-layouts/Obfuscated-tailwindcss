@@ -1,0 +1,441 @@
+export const metadata = {
+  metadataBase: new URL("https://ui-layouts.com"),
+  title: "How It Works",
+  description:
+    "Detailed explanation of Tailwind class obfuscation process with real examples and transformations",
+  keywords: [
+    "Obfus-Tail how it works",
+    "React components setup",
+    "Next.js Tailwind guide",
+    "Install UI components",
+    "Obfus-Tail documentation",
+    "How to use Obfus-Tail",
+    "Component library setup",
+    "React UI getting started",
+    "TailwindCSS component guide",
+    "Next.js UI tutorial",
+  ],
+};
+
+## The Transformation Process
+
+The obfuscation process follows these steps:
+
+1. **File Discovery** - Find all `.tsx`, `.jsx`, `.ts`, `.js` files
+2. **Class Extraction** - Parse `className` attributes using regex
+3. **Class Mapping** - Generate random names for each unique class
+4. **File Rewriting** - Replace original classes with obfuscated names
+5. **CSS Generation** - Create CSS with `@apply` rules
+6. **Map Export** - Save mapping for debugging
+
+## Real Example: Button Component
+
+### Input Component
+
+```tsx
+// components/ui/button.tsx
+import { cn } from "@/lib/utils";
+
+export function Button({
+  children,
+  variant = "primary",
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary";
+  className?: string;
+}) {
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+        variant === "primary"
+          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+          : "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## Real Example: Button Component (After Obfuscation)
+
+### Input Component (After Obfuscation)
+
+```tsx
+// components/ui/button.tsx (after obfuscation)
+import { cn } from "@/lib/utils";
+
+export function Button({
+  children,
+  variant = "primary",
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary";
+  className?: string;
+}) {
+  return (
+    <button
+      className={cn(
+        "x7y9z2w1 q3m5n6p8 a1b2c3d4 e5f6g7h8 i9j0k1l2 m3n4o5p6",
+        "r7s8t9u0 v1w2x3y4 z5a6b7c8 d9e0f1g2",
+        variant === "primary"
+          ? "h3i4j5k6 l7m8n9o0 p1q2r3s4 t5u6v7w8"
+          : "x9y0z1a2 b3c4d5e6 f7g8h9i0 j1k2l3m4",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+### Generated CSS
+
+```css
+/* app/obfuscated-styles.css */
+@import "tailwindcss";
+@import "./token.css";
+
+.x7y9z2w1 {
+  @apply inline-flex items-center justify-center;
+}
+.q3m5n6p8 {
+  @apply rounded-lg;
+}
+.a1b2c3d4 {
+  @apply px-4 py-2;
+}
+.e5f6g7h8 {
+  @apply text-sm font-medium;
+}
+.i9j0k1l2 {
+  @apply transition-colors;
+}
+.r7s8t9u0 {
+  @apply focus:outline-none;
+}
+.v1w2x3y4 {
+  @apply focus:ring-2;
+}
+.z5a6b7c8 {
+  @apply focus:ring-offset-2;
+}
+.h3i4j5k6 {
+  @apply bg-primary text-primary-foreground;
+}
+.l7m8n9o0 {
+  @apply hover:bg-primary/90;
+}
+.p1q2r3s4 {
+  @apply bg-secondary text-secondary-foreground;
+}
+.t5u6v7w8 {
+  @apply hover:bg-secondary/90;
+}
+```
+
+## Real Example: Card Component
+
+### Input Component
+
+```tsx
+// components/ui/card.tsx
+export function Card({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-lg border bg-card text-card-foreground shadow-sm",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function CardHeader({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function CardTitle({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <h3
+      className={cn(
+        "text-2xl font-semibold leading-none tracking-tight",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </h3>
+  );
+}
+```
+
+## Real Example: Card Component (After Obfuscation)
+
+### Input Component (After Obfuscation)
+
+```tsx
+// components/ui/card.tsx (after obfuscation)
+export function Card({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn("n9o8p7q6 r5s4t3u2 v1w0x9y8 z7a6b5c4", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function CardHeader({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("m3n2b1v0 c9x8z7a6 s5d4f3g2", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function CardTitle({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <h3
+      className={cn("h1j2k3l4 m5n6o7p8 q9r0s1t2 u3v4w5x6", className)}
+      {...props}
+    >
+      {children}
+    </h3>
+  );
+}
+```
+
+### Generated CSS
+
+```css
+.n9o8p7q6 {
+  @apply rounded-lg border;
+}
+.r5s4t3u2 {
+  @apply bg-card;
+}
+.v1w0x9y8 {
+  @apply text-card-foreground;
+}
+.z7a6b5c4 {
+  @apply shadow-sm;
+}
+.m3n2b1v0 {
+  @apply flex flex-col;
+}
+.c9x8z7a6 {
+  @apply space-y-1.5;
+}
+.s5d4f3g2 {
+  @apply p-6;
+}
+.h1j2k3l4 {
+  @apply text-2xl font-semibold;
+}
+.m5n6o7p8 {
+  @apply leading-none;
+}
+.q9r0s1t2 {
+  @apply tracking-tight;
+}
+```
+
+## Class Mapping Generation
+
+The script generates a mapping file `.obfuscation-map.json`:
+
+```json
+{
+  "inline-flex": "x7y9z2w1",
+  "items-center": "q3m5n6p8",
+  "justify-center": "a1b2c3d4",
+  "rounded-lg": "e5f6g7h8",
+  "px-4": "i9j0k1l2",
+  "py-2": "m3n4o5p6",
+  "text-sm": "r7s8t9u0",
+  "font-medium": "v1w2x3y4",
+  "transition-colors": "z5a6b7c8",
+  "focus:outline-none": "d9e0f1g2",
+  "focus:ring-2": "h3i4j5k6",
+  "focus:ring-offset-2": "l7m8n9o0",
+  "bg-primary": "h3i4j5k6",
+  "text-primary-foreground": "l7m8n9o0",
+  "hover:bg-primary/90": "p1q2r3s4",
+  "bg-secondary": "x9y0z1a2",
+  "text-secondary-foreground": "b3c4d5e6",
+  "hover:bg-secondary/90": "t5u6v7w8"
+}
+```
+
+This mapping helps with:
+
+- **Debugging** - See what each obfuscated class represents
+- **Reversibility** - Potentially reverse the process
+- **Analysis** - Understand class usage patterns
+
+## CSS Output Generation
+
+The generated CSS file uses `@apply` rules:
+
+```css
+/* app/obfuscated-styles.css */
+@import "tailwindcss";
+@import "./token.css";
+
+/* Base layout classes */
+.x7y9z2w1 {
+  @apply inline-flex items-center justify-center;
+}
+.q3m5n6p8 {
+  @apply rounded-lg;
+}
+
+/* Spacing classes */
+.a1b2c3d4 {
+  @apply px-4 py-2;
+}
+.e5f6g7h8 {
+  @apply text-sm font-medium;
+}
+
+/* Interactive classes */
+.i9j0k1l2 {
+  @apply transition-colors;
+}
+.r7s8t9u0 {
+  @apply focus:outline-none;
+}
+.v1w2x3y4 {
+  @apply focus:ring-2;
+}
+.z5a6b7c8 {
+  @apply focus:ring-offset-2;
+}
+
+/* Theme classes */
+.v1w2x3y4 {
+  @apply bg-primary text-primary-foreground;
+}
+.z5a6b7c8 {
+  @apply hover:bg-primary/90;
+}
+```
+
+## File Processing Pipeline
+
+```javascript
+function findFiles(dir) {
+  const files = [];
+  const items = fs.readdirSync(dir);
+
+  for (const item of items) {
+    const fullPath = path.join(dir, item);
+    const stat = fs.statSync(fullPath);
+
+    if (stat.isDirectory() && !item.startsWith(".")) {
+      files.push(...findFiles(fullPath));
+    } else if (item.match(/\.(tsx|jsx|ts|js)$/)) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+```
+
+## Build Order
+
+The build process follows this sequence:
+
+1. **Pre-build** - `node scripts/obfuscate-tailwind.js`
+2. **Next.js Build** - `next build`
+3. **Production Output** - Obfuscated HTML + CSS
+
+## Development vs Production
+
+### Example Comparison
+
+**Development HTML:**
+
+```html
+<button
+  class="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-4 py-2"
+>
+  Click me
+</button>
+```
+
+**Production HTML:**
+
+```html
+<button class="x7y9z2w1 q3m5n6p8 a1b2c3d4 h3i4j5k6 l7m8n9o0">Click me</button>
+```
+
+**Size Reduction:**
+
+- **Before:** 89 characters
+- **After:** 47 characters
+- **Reduction:** 47% smaller
+
+This detailed explanation shows exactly how the obfuscation process works, from input to output, with real examples you can see and understand.
