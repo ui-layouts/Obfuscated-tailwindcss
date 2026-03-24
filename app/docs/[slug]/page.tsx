@@ -17,18 +17,12 @@ export async function generateStaticParams() {
     slug: doc.slug === "index" ? "" : doc.slug,
   }));
 }
+
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  let slug = "";
-  if (params.slug) {
-    if (Array.isArray(params.slug)) {
-      slug = params.slug.length > 0 ? params.slug.join("/") : "";
-    } else {
-      slug = params.slug;
-    }
-  }
+  let slug = params.slug || "";
 
   // @ts-ignore
   const doc = await getDocBySlug(slug);
@@ -114,14 +108,10 @@ export default async function DocPage(props: {
   params: Promise<{ slug?: string }>;
 }) {
   const params = await props.params;
-  let slug = "";
-  if (params.slug) {
-    if (Array.isArray(params.slug)) {
-      slug = params.slug.length > 0 ? params.slug.join("/") : "";
-    } else {
-      slug = params.slug;
-    }
-  }
+
+  console.log(params);
+
+  let slug = params.slug || "";
 
   // @ts-ignore
   const doc = await getDocBySlug(slug);
