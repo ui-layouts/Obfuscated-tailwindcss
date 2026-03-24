@@ -7,6 +7,24 @@ import { InlineCodeRenderer } from "./components/code-components/inlineCodeRende
 import { InlinePreCodeRenderer } from "./components/code-components/inlinePreCodeRenderer";
 import { PreCode } from "./components/code-components/pre-code";
 import CodeWithTabs from "./components/code-components/code-tabs";
+import { createHeadingSlug } from "./lib/slug";
+
+function getHeadingText(children: React.ReactNode): string {
+  if (typeof children === "string" || typeof children === "number") {
+    return String(children);
+  }
+
+  if (Array.isArray(children)) {
+    return children.map((child) => getHeadingText(child)).join("");
+  }
+
+  if (children && typeof children === "object" && "props" in children) {
+    const element = children as React.ReactElement<{ children?: React.ReactNode }>;
+    return getHeadingText(element.props?.children);
+  }
+
+  return "";
+}
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     Tabs: ({ className, ...props }: React.ComponentProps<typeof Tabs>) => (
@@ -52,6 +70,34 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     h1: ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
       <span className={cn("m-0", className)} {...props} />
+    ),
+    h2: ({
+      className,
+      children,
+      id,
+      ...props
+    }: React.HTMLAttributes<HTMLHeadingElement>) => (
+      <h2
+        id={id || createHeadingSlug(getHeadingText(children))}
+        className={cn("scroll-m-20", className)}
+        {...props}
+      >
+        {children}
+      </h2>
+    ),
+    h3: ({
+      className,
+      children,
+      id,
+      ...props
+    }: React.HTMLAttributes<HTMLHeadingElement>) => (
+      <h3
+        id={id || createHeadingSlug(getHeadingText(children))}
+        className={cn("scroll-m-20", className)}
+        {...props}
+      >
+        {children}
+      </h3>
     ),
     div: ({
       className,
