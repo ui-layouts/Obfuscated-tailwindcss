@@ -13,14 +13,10 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const docs = await getAllDocs();
-  return docs.map((doc) => {
-    const slugParts = doc.slug === "index" ? [] : doc.slug.split("/");
-    return {
-      slug: slugParts,
-    };
-  });
+  return docs.map((doc) => ({
+    slug: doc.slug === "index" ? "" : doc.slug,
+  }));
 }
-
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>;
 }): Promise<Metadata> {
@@ -115,11 +111,9 @@ export async function generateMetadata(props: {
 }
 
 export default async function DocPage(props: {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug?: string }>;
 }) {
   const params = await props.params;
-
-  // Handle both string and array cases
   let slug = "";
   if (params.slug) {
     if (Array.isArray(params.slug)) {
