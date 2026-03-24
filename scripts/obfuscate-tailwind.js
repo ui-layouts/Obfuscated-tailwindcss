@@ -55,23 +55,7 @@ const CUSTOM_CLASSES = [
   "dark",
 ];
 
-const SKIP_CLASSES = [
-  "bg-opacity-20",
-  "bg-opacity-40",
-  "bg-opacity-50",
-  "bg-opacity-60",
-  "bg-opacity-80",
-  "bg-opacity-100",
-  "bg-blue",
-  "text-pirmary",
-  "rounded-rt-lg",
-  "group",
-  "peer",
-  "group-hover",
-  "group-focus",
-  "prose",
-  "not-prose",
-];
+const SKIP_CLASSES = ["rounded-rt-lg", "peer", "prose", "not-prose"];
 
 function generateRandomClassName() {
   const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
