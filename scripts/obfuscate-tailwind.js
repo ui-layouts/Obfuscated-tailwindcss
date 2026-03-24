@@ -240,7 +240,7 @@ function generateMappingCss(mapping) {
   css += "/* DO NOT EDIT MANUALLY - regenerated on build */\n\n";
   css += '@reference "tailwindcss";\n';
   // Uncomment when your project keeps semantic Tailwind tokens in app/token.css
-  // css += '@reference "./token.css";\n\n';
+  css += '@reference "./token.css";\n\n';
 
   for (const [classString, obfuscatedName] of Object.entries(mapping)) {
     // Keep variant classes like dark:, hover:, md:, 2xl: in @apply
