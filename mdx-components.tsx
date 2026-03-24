@@ -19,7 +19,9 @@ function getHeadingText(children: React.ReactNode): string {
   }
 
   if (children && typeof children === "object" && "props" in children) {
-    const element = children as React.ReactElement<{ children?: React.ReactNode }>;
+    const element = children as React.ReactElement<{
+      children?: React.ReactNode;
+    }>;
     return getHeadingText(element.props?.children);
   }
 
