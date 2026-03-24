@@ -4,7 +4,6 @@ import { getDocBySlug, getAllDocs } from "@/lib/docs";
 import { absoluteUrl, cn } from "@/lib/utils";
 import { Component } from "lucide-react";
 import TableOfContents from "@/components/table-of-contents";
-// import { ComponentPagination } from '@/components/website/code-components/pagination';
 import Footer from "@/components/footer";
 import CopyPage from "@/components/copy-page";
 import { GapPattern } from "@/components/gap-pattern";
@@ -14,17 +13,26 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const docs = await getAllDocs();
-  return docs.map((doc) => ({
-    slug: doc.slug === "index" ? [] : doc.slug.split("/"),
-  }));
+  return docs.map((doc) => {
+    const slugParts = doc.slug === "index" ? [] : doc.slug.split("/");
+    return {
+      slug: slugParts,
+    };
+  });
 }
 
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>;
 }): Promise<Metadata> {
   const params = await props.params;
-
-  const slug = params.slug || "";
+  let slug = "";
+  if (params.slug) {
+    if (Array.isArray(params.slug)) {
+      slug = params.slug.length > 0 ? params.slug.join("/") : "";
+    } else {
+      slug = params.slug;
+    }
+  }
 
   // @ts-ignore
   const doc = await getDocBySlug(slug);
@@ -110,8 +118,17 @@ export default async function DocPage(props: {
   params: Promise<{ slug?: string[] }>;
 }) {
   const params = await props.params;
-  console.log("params", params);
-  const slug = params.slug || "";
+
+  // Handle both string and array cases
+  let slug = "";
+  if (params.slug) {
+    if (Array.isArray(params.slug)) {
+      slug = params.slug.length > 0 ? params.slug.join("/") : "";
+    } else {
+      slug = params.slug;
+    }
+  }
+
   // @ts-ignore
   const doc = await getDocBySlug(slug);
 
