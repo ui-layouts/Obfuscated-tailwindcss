@@ -110,22 +110,29 @@ function getValidClassString(classString) {
 function extractClassStrings(content) {
   const classStrings = new Set();
 
+  const processRaw = (raw) => {
+    if (!raw) return;
+    raw = raw.trim();
+    if (!raw) return;
+
+    // ✅ Only keep non-skip classes for obfuscation
+    const toObfuscate = raw
+      .split(/\s+/)
+      .filter((cls) => !shouldSkipClass(cls))
+      .join(" ");
+
+    const valid = getValidClassString(toObfuscate);
+    if (valid) classStrings.add(toObfuscate); // ✅ store only the obfuscatable part
+  };
+
   let match;
   while ((match = TAILWIND_CLASS_REGEX.exec(content)) !== null) {
-    const raw = (match[1] || "").trim();
-    if (!raw) continue;
-    if (isPureCustomClass(raw)) continue;
-    const valid = getValidClassString(raw);
-    if (valid) classStrings.add(raw);
+    processRaw(match[1] || "");
   }
   TAILWIND_CLASS_REGEX.lastIndex = 0;
 
   while ((match = CLASS_ATTR_REGEX.exec(content)) !== null) {
-    const raw = (match[1] || "").trim();
-    if (!raw) continue;
-    if (isPureCustomClass(raw)) continue;
-    const valid = getValidClassString(raw);
-    if (valid) classStrings.add(raw);
+    processRaw(match[1] || "");
   }
   CLASS_ATTR_REGEX.lastIndex = 0;
 
@@ -176,20 +183,27 @@ function replaceClassesInFile(filePath, mapping) {
           groups.slice(0, 4).find((g) => g != null) || ""
         ).trim();
         if (!classString) return match;
-        const obfuscated = mapping[classString];
-        if (!obfuscated) return match;
-        modified = true;
 
-        // ✅ Keep group/peer in HTML alongside obfuscated class
+        // ✅ Build the key the same way extractClassStrings does
+        const toObfuscate = classString
+          .split(/\s+/)
+          .filter((cls) => !shouldSkipClass(cls))
+          .join(" ");
+
+        const obfuscated = mapping[toObfuscate];
+        if (!obfuscated) return match;
+
+        // ✅ Keep skip classes in HTML
         const keepInHtml = classString
           .split(/\s+/)
-          .filter((cls) => ["group", "peer"].includes(cls))
+          .filter((cls) => shouldSkipClass(cls))
           .join(" ");
 
         const replacement = keepInHtml
-          ? `${keepInHtml} ${obfuscated}`
+          ? `${obfuscated} ${keepInHtml}`
           : obfuscated;
 
+        modified = true;
         return match.split(classString).join(replacement);
       } catch (e) {
         return match;
