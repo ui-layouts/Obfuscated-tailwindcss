@@ -30,14 +30,14 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="lg:col-span-2 relative">
+    <aside className="xl:w-48 lg:w-44 w-40 shrink-0 lg:block hidden relative">
       <nav className="sticky top-20 space-y-2 pl-2">
-        <ul className="pb-1 pt-12">
+        <ul className="pb-1 pt-6">
           {basePath?.map((link, index) => (
             <li key={`id-${index}`}>
               <Link
                 href={link.href}
-                className={`flex gap-2 group font-normal items-center py-1 transition-all ${
+                className={`flex gap-2 lg:text-base text-sm group font-normal items-center py-1 transition-all ${
                   link.href === pathname
                     ? "active-nav"
                     : "text-slate-600 hover:text-slate-900"

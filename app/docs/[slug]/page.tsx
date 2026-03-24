@@ -7,6 +7,7 @@ import TableOfContents from "@/components/table-of-contents";
 // import { ComponentPagination } from '@/components/website/code-components/pagination';
 import Footer from "@/components/footer";
 import CopyPage from "@/components/copy-page";
+import { GapPattern } from "@/components/gap-pattern";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -120,31 +121,41 @@ export default async function DocPage(props: {
 
   return (
     <>
-      <section className="w-full max-w-none prose pb-5 prose-h1:text-2xl prose-h1:font-semibold prose-h1:mb-4 prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-medium prose-strong:font-medium prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4 prose-li:mb-1 prose-blockquote:mb-4 prose-table:mb-4 prose-pre:mb-4">
+      <section className="md:pr-8 pr-4 lg:pl-0 pl-4 md:w-full max-w-none prose pb-5 prose-h1:text-2xl prose-h1:font-medium prose-h1:mb-4 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-medium prose-h3:text-2xl prose-h3:text-primary/70 prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-medium prose-strong:font-medium prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4 prose-li:mb-1 prose-blockquote:mb-4 prose-table:mb-4 prose-pre:mb-4">
         <article className="mb-4 mt-4 not-prose">
-          <div className="space-y-2 rounded-md text-black">
+          <div className="space-y-2 rounded-md bg-neutral-100 p-4 border text-black">
             <div className="flex items-center gap-2 justify-between">
               <h1
                 className={cn(
-                  "mb-0 flex scroll-m-20 items-center lg:text-3xl text-2xl gap-2 font-medium tracking-tight",
+                  "flex scroll-m-20 items-center lg:text-2xl text-xl gap-2 font-medium tracking-tight",
                 )}
               >
-                <div className="lg:w-9 w-8 lg:h-9 h-8 bg-primary grid place-content-center text-primary-foreground rounded-lg">
-                  <Component size={20} />
+                <div className="lg:w-7 w-6 lg:h-7 h-6 bg-primary md:grid hidden place-content-center text-primary-foreground rounded">
+                  <Component size={16} />
                 </div>
                 {doc.content.metadata.title}
               </h1>
               <CopyPage />
             </div>
-            <p className="sm:text-sm text-xs pt-2">
+            <p className="sm:text-sm text-xs text-primary/80">
               {doc.content.metadata.description}
             </p>
           </div>
         </article>
         <Content />
         {/* <ComponentPagination doc={doc} /> */}
+        <Footer />
       </section>
-      <Footer />
+      <div className="relative lg:w-52 w-40 shrink-0 lg:pl-6 hidden md:block ">
+        <GapPattern className="2xl:w-10 lg:w-7 w-5 h-full border-x border-y-0 absolute lg:-left-4 -left-5 top-0" />
+
+        {/* Table of Contents - only show if doc exists and has TOC */}
+        {doc?.toc && (
+          <div className="sticky top-14">
+            <TableOfContents toc={doc.toc} />
+          </div>
+        )}
+      </div>
     </>
   );
 }

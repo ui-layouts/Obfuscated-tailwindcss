@@ -1,22 +1,30 @@
 export const metadata = {
-  metadataBase: new URL("https://ui-layouts.com"),
+  metadataBase: new URL("https://obfuscated-tailwind.ui-layouts.com/"),
   title: "Getting Started",
   description:
-    "Complete setup guide for Tailwind class obfuscation with script, build configuration, and token setup",
+    "Comprehensive setup guide for implementing Tailwind class obfuscation in your projects. Learn step-by-step installation, script configuration, build process integration, token setup, and best practices. Get your obfuscation workflow running in minutes with detailed examples and troubleshooting tips.",
   keywords: [
     "Obfus-Tail getting started",
+    "Tailwind class obfuscation setup",
     "React components setup",
     "Next.js Tailwind guide",
     "Install UI components",
     "Obfus-Tail documentation",
     "How to use Obfus-Tail",
     "Component library setup",
+    "React UI getting started",
+    "TailwindCSS component guide",
+    "Next.js UI tutorial",
+    "Build configuration",
+    "Token setup guide",
+    "Script installation",
+    "Project integration",
   ],
 };
 
 import { TableOfContents } from "@/components/table-of-contents";
 
-## Install Required Packages
+## Installation
 
 First, install the necessary packages for your Tailwind setup:
 
@@ -25,7 +33,7 @@ npm install tailwindcss postcss autoprefixer
 npm install -D @tailwindcss/typography
 ```
 
-## Create Obfuscation Script
+## Obfuscation Script
 
 Create `scripts/obfuscate-tailwind.js`:
 
@@ -161,7 +169,7 @@ The build process will now:
 2. Generate the obfuscated CSS file
 3. Then run the Next.js build
 
-## Import Generated CSS
+## Generated CSS
 
 After the script runs, it will generate `app/obfuscated-styles.css`. Import this in your `app/layout.tsx`:
 
@@ -209,7 +217,7 @@ Create `app/token.css` for your theme variables:
 }
 ```
 
-## Import Token in Globals
+## Import Token
 
 Add the token import to your `app/globals.css`:
 
@@ -217,23 +225,6 @@ Add the token import to your `app/globals.css`:
 @import "tailwindcss";
 @import "./token.css";
 ```
-
-## That's It! 🎉
-
-Your setup is now complete. Run the build:
-
-```bash
-npm run build
-```
-
-The script will:
-
-- Find all `className` attributes in your files
-- Generate random obfuscated class names
-- Create a CSS file with `@apply` rules
-- Update your files with the new class names
-
-**Next:** Learn [how it works](/docs/how-it-works) with detailed examples.
 
 ## Output Files
 
@@ -243,3 +234,12 @@ After a successful build, you should see:
 - `.obfuscation-map.json`
 
 These are generated files and should reflect the current classes found in your project.
+
+The script will:
+
+- Find all `className` attributes in your files
+- Generate random obfuscated class names
+- Create a CSS file with `@apply` rules
+- Update your files with the new class names
+
+**Next:** Learn [how it works](/docs/how-it-works) with detailed examples.

@@ -1,8 +1,8 @@
 export const metadata = {
-  metadataBase: new URL("https://ui-layouts.com"),
+  metadataBase: new URL("https://obfuscated-tailwind.ui-layouts.com/"),
   title: "Skipping Tailwind Classes",
   description:
-    "Learn how to bypass class obfuscation with custom CSS classes and semantic naming strategies",
+    "Complete guide to bypassing Tailwind class obfuscation with custom CSS classes, semantic naming strategies, and selective class preservation. Learn how to maintain critical styling, handle third-party components, and implement flexible skipping mechanisms for your obfuscation workflow.",
   keywords: [
     "Obfus-Tail skipping tailwind classes",
     "React components setup",
@@ -14,6 +14,10 @@ export const metadata = {
     "React UI getting started",
     "TailwindCSS component guide",
     "Next.js UI tutorial",
+    "Custom CSS classes",
+    "Semantic naming",
+    "Class obfuscation bypass",
+    "Third-party components",
   ],
 };
 
@@ -28,7 +32,9 @@ There are several valid reasons to skip Tailwind class obfuscation:
 - **Animation classes** - Complex animations that might break
 - **Utility overrides** - One-off styles for specific components
 
-### Method 1: Custom Classes (Never Obfuscated)
+## Method 1:
+
+### Custom Classes
 
 These are your own custom CSS classes that should never be obfuscated:
 
@@ -76,7 +82,9 @@ if (CUSTOM_CLASSES.includes(className)) {
 }
 ```
 
-### Method 2: Skip Classes (Problematic Tailwind Classes)
+## Method 2:
+
+### Skip Classes
 
 These Tailwind classes should be skipped due to compatibility or styling issues:
 
@@ -103,7 +111,9 @@ if (SKIP_CLASSES.includes(className)) {
 }
 ```
 
-### Method 3: Complete Implementation
+## Method 3:
+
+### Implementation
 
 Here's how to implement both custom and skip classes in your obfuscation script:
 

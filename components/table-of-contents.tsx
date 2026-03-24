@@ -41,19 +41,20 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState("");
   const pathname = usePathname();
+  const mainPath = pathname.split("/")[2];
 
   const issueUrl =
     `https://github.com/ui-layouts/Obfuscated-tailwindcss/issues/new?` +
-    `title=${encodeURIComponent(`[bug]: ${pathname}`)}` +
+    `title=${encodeURIComponent(`[bug]: ${mainPath}`)}` +
     `&labels=bug&labels=documentation` +
     `&template=bug_report.md`;
 
   const featureUrl =
     `https://github.com/ui-layouts/Obfuscated-tailwindcss/issues/new?` +
-    `title=${encodeURIComponent(`[feature]: ${pathname}`)}` +
+    `title=${encodeURIComponent(`[feature]: ${mainPath}`)}` +
     `&labels=enhancement,documentation&template=feature_request.md`;
 
-  const editUrl = `https://github.com/ui-layouts/Obfuscated-tailwindcss/blob/main/apps/obfuscated-tailwindcss/content${pathname}.mdx`;
+  const editUrl = `https://github.com/ui-layouts/Obfuscated-tailwindcss/blob/main/apps/obfuscated-tailwindcss/content/pages/${mainPath}.mdx`;
 
   const { scrollYProgress } = useScroll();
 
@@ -119,10 +120,10 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
 
   return (
     <>
-      <aside className="hidden lg:block xl:w-[170px] w-[150px] shrink-0">
+      <aside className="w-full">
         <div className="sticky top-14 h-[calc(100vh-6em)]">
-          <div className="absolute -bottom-5 left-0 z-2 xl:w-[170px] w-[150px] h-20 bg-linear-to-t from-white via-white"></div>
-          <div className="absolute -top-5 left-0 xl:w-[170px] w-[150px] h-20 z-2 bg-linear-to-b from-white via-white"></div>
+          <div className="absolute -bottom-5 left-0 z-2 w-full h-20 bg-linear-to-t from-white via-white"></div>
+          <div className="absolute -top-5 left-0 w-full h-20 z-2 bg-linear-to-b from-white via-white"></div>
           <ScrollArea className="h-[calc(100vh-6em)] px-3 py-3 rounded-md">
             <div className="flex flex-col h-full pt-10 pb-10">
               <style jsx global>{`
@@ -136,7 +137,7 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
                   <span className="text-sm px-1 text-primary font-semibold pb-1 inline-block">
                     On This Page
                   </span>
-                  <hr className="dark:border-neutral-800" />
+                  <hr />
                   <ul className=" list-none m-0 ml-0 xl:text-base text-sm space-y-0.5 pt-2 pl-0">
                     {tocItems?.map((item) => {
                       return (
@@ -145,23 +146,23 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
                             href={item.url}
                             className={`${
                               activeId === item.url.slice(1)
-                                ? " font-semibold  text-primary py-1"
+                                ? "font-semibold text-primary py-1"
                                 : ""
-                            } no-underline rounded-xs px-1 hover:text-primary text-muted-foreground `}
+                            } no-underline rounded-xs px-1 hover:text-primary text-muted-foreground text-sm`}
                           >
                             {item.title}
                           </a>
                           {item.items && item.items.length > 0 && (
-                            <ul className="list-none  pl-4 space-y-2 pt-0.5">
+                            <ul className="list-none pl-4 pt-0.5">
                               {item.items.map((subItem) => (
                                 <li key={subItem.url}>
                                   <a
                                     href={subItem.url}
                                     className={`${
                                       activeId === subItem.url.slice(1)
-                                        ? " font-semibold text-primary"
+                                        ? "font-semibold text-primary"
                                         : " "
-                                    } no-underline hover:text-primary text-muted-foreground`}
+                                    } no-underline hover:text-primary text-muted-foreground text-sm`}
                                   >
                                     {subItem.title}
                                   </a>
@@ -180,7 +181,7 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
                 <span className="text-sm px-1 text-primary font-semibold pb-1 inline-block">
                   Contribute
                 </span>
-                <hr className="dark:border-neutral-800" />
+                <hr />
                 <div className="m-0  text-[0.8em] space-y-2 pt-2 pl-0">
                   {contribute?.map((nav) => (
                     <a
@@ -197,21 +198,6 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
               </div>
 
               <div className="space-y-4 pt-5 mt-auto">
-                {/* <a
-                  href='https://www.producthunt.com/products/ui-layouts?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-ui-layouts'
-                  target='_blank'
-                  className='mb-3'
-                  rel='noopener noreferrer'
-                >
-                  <img
-                    alt="Ui-Layouts - Not another component library, It's your frontend universe  | Product Hunt"
-                    width='250'
-                    height='54'
-                    src='https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1069263&amp;theme=light&amp;t=1769576764705'
-                  />
-                </a> */}
-                {/* add something for the pro version */}
-
                 <BuyMeCoffee
                   classname="mt-10 w-36 h-32 my-0"
                   iconClassName="w-full h-full group-hover:translate-y-14"

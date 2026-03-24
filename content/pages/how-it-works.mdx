@@ -1,10 +1,11 @@
 export const metadata = {
-  metadataBase: new URL("https://ui-layouts.com"),
-  title: "How It Works",
+  metadataBase: new URL("https://obfuscated-tailwind.ui-layouts.com/"),
+  title: "How It Works ",
   description:
-    "Detailed explanation of Tailwind class obfuscation process with real examples and transformations",
+    "Deep dive into the Tailwind class obfuscation process with comprehensive examples, step-by-step transformations, and real-world component demonstrations. Understand the complete workflow from file discovery to CSS generation, including class mapping, file rewriting, and debugging techniques.",
   keywords: [
     "Obfus-Tail how it works",
+    "Tailwind class obfuscation process",
     "React components setup",
     "Next.js Tailwind guide",
     "Install UI components",
@@ -14,10 +15,14 @@ export const metadata = {
     "React UI getting started",
     "TailwindCSS component guide",
     "Next.js UI tutorial",
+    "Class transformation process",
+    "CSS generation workflow",
+    "File discovery and parsing",
+    "Component obfuscation examples",
   ],
 };
 
-## The Transformation Process
+## The Process
 
 The obfuscation process follows these steps:
 
@@ -28,9 +33,7 @@ The obfuscation process follows these steps:
 5. **CSS Generation** - Create CSS with `@apply` rules
 6. **Map Export** - Save mapping for debugging
 
-## Real Example: Button Component
-
-### Input Component
+## Before Obfuscate
 
 ```tsx
 // components/ui/button.tsx
@@ -64,9 +67,7 @@ export function Button({
 }
 ```
 
-## Real Example: Button Component (After Obfuscation)
-
-### Input Component (After Obfuscation)
+## After Obfuscation
 
 ```tsx
 // components/ui/button.tsx (after obfuscation)
@@ -100,7 +101,7 @@ export function Button({
 }
 ```
 
-### Generated CSS
+## Generated CSS
 
 ```css
 /* app/obfuscated-styles.css */
@@ -145,164 +146,7 @@ export function Button({
 }
 ```
 
-## Real Example: Card Component
-
-### Input Component
-
-```tsx
-// components/ui/card.tsx
-export function Card({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-lg border bg-card text-card-foreground shadow-sm",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-export function CardHeader({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
-export function CardTitle({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <h3
-      className={cn(
-        "text-2xl font-semibold leading-none tracking-tight",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </h3>
-  );
-}
-```
-
-## Real Example: Card Component (After Obfuscation)
-
-### Input Component (After Obfuscation)
-
-```tsx
-// components/ui/card.tsx (after obfuscation)
-export function Card({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn("n9o8p7q6 r5s4t3u2 v1w0x9y8 z7a6b5c4", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-export function CardHeader({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("m3n2b1v0 c9x8z7a6 s5d4f3g2", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
-export function CardTitle({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <h3
-      className={cn("h1j2k3l4 m5n6o7p8 q9r0s1t2 u3v4w5x6", className)}
-      {...props}
-    >
-      {children}
-    </h3>
-  );
-}
-```
-
-### Generated CSS
-
-```css
-.n9o8p7q6 {
-  @apply rounded-lg border;
-}
-.r5s4t3u2 {
-  @apply bg-card;
-}
-.v1w0x9y8 {
-  @apply text-card-foreground;
-}
-.z7a6b5c4 {
-  @apply shadow-sm;
-}
-.m3n2b1v0 {
-  @apply flex flex-col;
-}
-.c9x8z7a6 {
-  @apply space-y-1.5;
-}
-.s5d4f3g2 {
-  @apply p-6;
-}
-.h1j2k3l4 {
-  @apply text-2xl font-semibold;
-}
-.m5n6o7p8 {
-  @apply leading-none;
-}
-.q9r0s1t2 {
-  @apply tracking-tight;
-}
-```
-
-## Class Mapping Generation
+## Class Mapping
 
 The script generates a mapping file `.obfuscation-map.json`:
 
@@ -335,55 +179,7 @@ This mapping helps with:
 - **Reversibility** - Potentially reverse the process
 - **Analysis** - Understand class usage patterns
 
-## CSS Output Generation
-
-The generated CSS file uses `@apply` rules:
-
-```css
-/* app/obfuscated-styles.css */
-@import "tailwindcss";
-@import "./token.css";
-
-/* Base layout classes */
-.x7y9z2w1 {
-  @apply inline-flex items-center justify-center;
-}
-.q3m5n6p8 {
-  @apply rounded-lg;
-}
-
-/* Spacing classes */
-.a1b2c3d4 {
-  @apply px-4 py-2;
-}
-.e5f6g7h8 {
-  @apply text-sm font-medium;
-}
-
-/* Interactive classes */
-.i9j0k1l2 {
-  @apply transition-colors;
-}
-.r7s8t9u0 {
-  @apply focus:outline-none;
-}
-.v1w2x3y4 {
-  @apply focus:ring-2;
-}
-.z5a6b7c8 {
-  @apply focus:ring-offset-2;
-}
-
-/* Theme classes */
-.v1w2x3y4 {
-  @apply bg-primary text-primary-foreground;
-}
-.z5a6b7c8 {
-  @apply hover:bg-primary/90;
-}
-```
-
-## File Processing Pipeline
+## File Processing
 
 ```javascript
 function findFiles(dir) {
@@ -412,11 +208,7 @@ The build process follows this sequence:
 2. **Next.js Build** - `next build`
 3. **Production Output** - Obfuscated HTML + CSS
 
-## Development vs Production
-
-### Example Comparison
-
-**Development HTML:**
+### Development
 
 ```html
 <button
@@ -426,7 +218,7 @@ The build process follows this sequence:
 </button>
 ```
 
-**Production HTML:**
+### Production
 
 ```html
 <button class="x7y9z2w1 q3m5n6p8 a1b2c3d4 h3i4j5k6 l7m8n9o0">Click me</button>

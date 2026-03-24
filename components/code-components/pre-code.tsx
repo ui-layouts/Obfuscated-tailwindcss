@@ -5,10 +5,10 @@ import { CopyButton } from "./copy-button";
 import { CopyNpmCommandButton } from "./copy-npm-button";
 
 const codeShellClassName =
-  "not-prose overflow-x-auto rounded-2xl border border-border bg-background/95 shadow-sm dark:border-border dark:bg-background/95";
+  "not-prose overflow-x-auto rounded-lg border border-border bg-neutral-100";
 
 const codeHeaderClassName =
-  "flex items-center justify-between gap-3 border-b border-border/80 px-4 py-1 dark:border-border/80";
+  "flex items-center justify-between gap-3 border-b border-border/80 px-4 py-1";
 
 const codeBodyClassName =
   "[&_pre]:m-0 [&_pre]:max-h-[550px] [&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-4 [&_code]:font-mono [&_code]:text-[13px] [&_code]:leading-6";
@@ -41,11 +41,11 @@ export async function PreCode({
 
       <div className={codeShellClassName}>
         <div className={codeHeaderClassName}>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-chart-1" />
-              <span className="h-2.5 w-2.5 rounded-full bg-chart-2" />
-              <span className="h-2.5 w-2.5 rounded-full bg-chart-3" />
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-chart-1" />
+              <span className="h-2 w-2 rounded-full bg-chart-2" />
+              <span className="h-2 w-2 rounded-full bg-chart-3" />
             </div>
             <span className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
               {label}
@@ -53,15 +53,9 @@ export async function PreCode({
           </div>
 
           {isPackageInstallCommand ? (
-            <CopyNpmCommandButton
-              code={value}
-              classname="static border-border bg-muted dark:border-border dark:bg-muted"
-            />
+            <CopyNpmCommandButton code={value} classname="border-border" />
           ) : (
-            <CopyButton
-              code={value}
-              classname="static border-border bg-muted dark:border-border dark:bg-muted"
-            />
+            <CopyButton code={value} classname="border-border" />
           )}
         </div>
 

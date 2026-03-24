@@ -20,11 +20,12 @@ import { AnimatePresence, motion } from "motion/react";
 
 export default function CopyPage() {
   const pathname = usePathname() || "";
+  const mainPath = pathname.split("/")[2];
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  const githubRawUrl = `https://raw.githubusercontent.com/ui-layouts/uilayouts/main/apps/ui-layout/content${pathname}.mdx`;
-  const docsUrl = `https://www.ui-layouts.com${pathname}`;
+  // console.log("pathname", mainPath);
+  const githubRawUrl = `https://raw.githubusercontent.com/ui-layouts/Obfuscated-tailwindcss/refs/heads/main/content/pages/${mainPath}.mdx`;
+  const docsUrl = `https://obfuscated-tailwind.ui-layouts.com/docs/${mainPath}`;
 
   const fetchMdx = async (): Promise<string> => {
     const resp = await fetch(githubRawUrl);
@@ -78,10 +79,10 @@ export default function CopyPage() {
     window.open(url, "_blank");
   };
   return (
-    <div className="bg-secondary group/buttons relative flex rounded-lg p-1 gap-1">
+    <div className="group/buttons relative flex items-center rounded-lg p-1 gap-1">
       <Button size="sm" onClick={handleCopyPage}>
         <AnimatePresence mode="popLayout" initial={false}>
-          <motion.div
+          <motion.span
             key={copied ? "check" : "copy"}
             initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -103,7 +104,7 @@ export default function CopyPage() {
                 {isLoading ? (
                   <>
                     <svg
-                      className="ml-2  size-4 animate-spin text-primary"
+                      className="ml-2  size-4 animate-spin text-white"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -128,17 +129,21 @@ export default function CopyPage() {
                 )}{" "}
               </>
             )}
-          </motion.div>
+          </motion.span>
         </AnimatePresence>
       </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="outline" />}>
+        <DropdownMenuTrigger
+          render={
+            <Button variant="outline" className=" h-8 bg-white dark:bg-white" />
+          }
+        >
           <ChevronDown className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-44 dark:bg-black bg-white text-primary"
+          className="w-44 bg-white text-primary"
           align="center"
-          alignOffset={-30}
+          alignOffset={-55}
         >
           <DropdownMenuItem onClick={handleViewAsMarkdown}>
             <svg

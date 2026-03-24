@@ -1,6 +1,6 @@
-# Obfuscated TailwindCSS
+# Obfustail
 
-Obfuscated TailwindCSS is a build-time approach for Next.js projects that rewrites readable Tailwind utility strings into short generated class names, then emits a stylesheet that maps those generated selectors back to the original Tailwind rules.
+Obfustail is a build-time approach for Next.js projects that rewrites readable Tailwind utility strings into short generated class names, then emits a stylesheet that maps those generated selectors back to the original Tailwind rules.
 
 This repository demonstrates the full flow, including the token setup required for semantic Tailwind utilities such as `bg-primary`, `text-primary-foreground`, and `bg-background`.
 

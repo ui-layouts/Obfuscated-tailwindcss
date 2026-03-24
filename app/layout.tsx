@@ -7,11 +7,16 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Obfuscated TailwindCSS",
+  title: "Obfustail",
   description:
     "Transform your Tailwind utility classes into optimized, obfuscated CSS. Protect your code and enhance performance with automatic build-time obfuscation.",
   keywords: [
     "TailwindCSS",
+    "ObfusTail",
+    "ObfusTail Projects",
+    "Protect your tailwindcss code using ObfusTail",
+    "how can i hide my tailwindcss code using ObfusTail",
+    "how can i hide my tailwindcss code",
     "CSS obfuscation",
     "bundle optimization",
     "code protection",
@@ -59,17 +64,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Obfuscated TailwindCSS - Protect & Optimize Your CSS",
+    title: "Obfustail - Protect & Optimize Your CSS",
     description:
       "Transform your readable Tailwind utility classes into optimized, obfuscated CSS that protects your code, reduces bundle size, and enhances performance.",
     url: "https://obfuscated-tailwind.ui-layouts.com",
-    siteName: "Obfuscated TailwindCSS",
+    siteName: "Obfustail",
     images: [
       {
         url: "/og.jpg",
         width: 1200,
         height: 630,
-        alt: "Obfuscated TailwindCSS - CSS Protection and Optimization",
+        alt: "Obfustail - CSS Protection and Optimization",
       },
     ],
     locale: "en_US",
@@ -77,7 +82,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Obfuscated TailwindCSS - Protect & Optimize Your CSS",
+    title: "Obfustail - Protect & Optimize Your CSS",
     description:
       "Transform your Tailwind classes into obfuscated CSS. Reduce bundle size and protect your code.",
     images: ["/og.jpg"],

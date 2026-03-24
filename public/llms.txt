@@ -1,4 +1,4 @@
-# Obfuscated TailwindCSS
+# Obfustail
 A build-time CSS obfuscation tool for TailwindCSS that transforms readable utility classes into optimized, obfuscated class names.
 
 ## Description
