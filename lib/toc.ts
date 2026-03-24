@@ -3,6 +3,7 @@ import { toString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
 import { Root } from 'mdast';
 import { unified } from 'unified';
+import { createHeadingSlug } from './slug';
 
 export interface TableOfContents {
   items: Array<{
@@ -39,7 +40,7 @@ export async function getTableOfContents(
 
   headings.forEach((heading: any) => {
     const title = toString(heading);
-    const url = `#${title.toLowerCase().replace(/\s+/g, '-')}`;
+    const url = `#${createHeadingSlug(title)}`;
 
     if (heading.depth === 2) {
       currentH2 = { title, url, items: [] };
