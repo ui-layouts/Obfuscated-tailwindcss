@@ -79,7 +79,7 @@ export default function CopyPage() {
     window.open(url, "_blank");
   };
   return (
-    <div className="group/buttons relative flex items-center rounded-lg p-1 gap-1">
+    <div className="relative flex items-center rounded-lg p-1 gap-1">
       <Button size="sm" onClick={handleCopyPage}>
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
