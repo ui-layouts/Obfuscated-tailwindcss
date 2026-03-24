@@ -1,5 +1,5 @@
-import { extractCodeFromFilePath } from '@/lib/code';
-import { PreCode } from './pre-code';
+import { extractCodeFromFilePath } from "@/lib/code";
+import { PreCode } from "./pre-code";
 
 type CodeBlockProps = {
   filePath: string;
@@ -14,10 +14,10 @@ export default function CodeBlock({ filePath }: CodeBlockProps) {
       <PreCode
         codeblock={{
           value: fileContent,
-          lang: 'tsx',
-          meta: '',
+          lang: "tsx",
+          meta: "",
         }}
-        classname={'border-none'}
+        classname={"border-none"}
       />
     </>
   );

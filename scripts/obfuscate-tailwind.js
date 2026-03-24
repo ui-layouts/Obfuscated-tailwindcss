@@ -69,6 +69,8 @@ const SKIP_CLASSES = [
   "peer",
   "group-hover",
   "group-focus",
+  "prose",
+  "not-prose",
 ];
 
 function generateRandomClassName() {
@@ -86,6 +88,18 @@ function isPureCustomClass(classString) {
   return classes.every((cls) => CUSTOM_CLASSES.includes(cls));
 }
 
+function shouldSkipClass(cls) {
+  if (SKIP_CLASSES.includes(cls)) return true;
+  if (CUSTOM_CLASSES.includes(cls)) return true;
+  if (
+    SKIP_CLASSES.some(
+      (skip) => cls.startsWith(skip + "-") || cls.startsWith(skip + ":"),
+    )
+  )
+    return true;
+  return false;
+}
+
 function getValidClassString(classString) {
   if (!classString || classString.trim().length === 0) return null;
 
@@ -99,7 +113,7 @@ function getValidClassString(classString) {
       if (cls.includes("{") || cls.includes("}")) return false;
       if (cls.endsWith("-")) return false;
       if (cls.endsWith(":")) return false;
-      if (SKIP_CLASSES.includes(cls)) return false;
+      if (shouldSkipClass(cls)) return false;
       if (cls.includes("[") && !cls.includes("]")) return false;
       if (cls.includes("]") && !cls.includes("[")) return false;
       return true;
@@ -239,7 +253,6 @@ function generateMappingCss(mapping) {
   let css = "/* Auto-generated obfuscation mapping */\n";
   css += "/* DO NOT EDIT MANUALLY - regenerated on build */\n\n";
   css += '@reference "tailwindcss";\n';
-  // Uncomment when your project keeps semantic Tailwind tokens in app/token.css
   css += '@reference "./token.css";\n\n';
 
   for (const [classString, obfuscatedName] of Object.entries(mapping)) {
@@ -254,10 +267,7 @@ function generateMappingCss(mapping) {
         if (cls.includes("{") || cls.includes("}")) return false;
         if (cls.endsWith("-")) return false;
         if (cls.endsWith(":")) return false;
-        if (SKIP_CLASSES.includes(cls)) return false;
-
-        // ✅ Only skip BROKEN arbitrary values - unclosed brackets
-        // Keep valid ones like w-[62rem], md:w-[85%], h-[55vh] etc
+        if (shouldSkipClass(cls)) return false;
         if (cls.includes("[") && !cls.includes("]")) return false;
         if (cls.includes("]") && !cls.includes("[")) return false;
 
