@@ -1,0 +1,116 @@
+export const metadata = {
+  metadataBase: new URL("https://obfustail.ui-layouts.com/"),
+  title: "File Scanning Configuration",
+  description:
+    "Obfus-Tail automatically scans your project files to find Tailwind classes for obfuscation. Understanding how the scanning works helps you control exactly which files get processed.",
+  keywords: [
+    "Obfus-Tail file scanning",
+    "Tailwind class scanning",
+    "File filtering configuration",
+    "Include exclude patterns",
+    "Obfuscation file control",
+  ],
+};
+
+## File Scanning
+
+The obfuscation script uses a specific configuration to scan your project files. Here's the actual configuration from `scripts/obfuscate-tailwind.js`:
+
+```jsx
+const CONFIG = {
+  filesToScan: [
+    "src/**/*.{jsx,tsx,js,ts,html}",
+    "pages/**/*.{jsx,tsx}",
+    "components/**/*.{jsx,tsx}",
+    "app/**/*.{jsx,tsx}",
+  ],
+  excludePatterns: ["node_modules", ".next", "dist", ".git"],
+  outputCssPath: "app/obfuscated-styles.css",
+  mapFilePath: ".obfuscation-map.json",
+  randomNameLength: 8,
+};
+```
+
+## How it Works
+
+The script uses the `glob` package to find files matching the patterns in `filesToScan` while excluding anything matching `excludePatterns`.
+
+### Discovery File
+
+```jsx
+// For each pattern in CONFIG.filesToScan
+const files = await glob(pattern, {
+  ignore: CONFIG.excludePatterns,
+  windowsPathsNoEscape: true,
+  dot: true,
+});
+```
+
+### Class Extraction
+
+The script searches for `className` and `class` attributes in your files:
+
+```jsx
+const TAILWIND_CLASS_REGEX =
+  /\bclassName\s*=\s*(["'`])((?:\\.|(?!\1)[\s\S])*)\1/g;
+const CLASS_ATTR_REGEX = /\bclass\s*=\s*(["'`])((?:\\.|(?!\1)[\s\S])*)\1/g;
+```
+
+## File Scanning
+
+To customize which files get scanned, modify the `CONFIG` object in `scripts/obfuscate-tailwind.js`:
+
+### Add New File
+
+```jsx
+const CONFIG = {
+  filesToScan: [
+    "src/**/*.{jsx,tsx,js,ts,html}",
+    "pages/**/*.{jsx,tsx}",
+    "components/**/*.{jsx,tsx}",
+    "app/**/*.{jsx,tsx}",
+    // Add your custom patterns here
+    "lib/**/*.{ts,js}",
+    "hooks/**/*.{ts,js}",
+  ],
+  excludePatterns: ["node_modules", ".next", "dist", ".git"],
+  // ... rest of config
+};
+```
+
+### App Router
+
+```jsx
+const CONFIG = {
+  filesToScan: [
+    "app/**/*.{tsx,jsx}", // App router pages and layouts
+    "components/**/*.{tsx,jsx}", // Shared components
+  ],
+  excludePatterns: [
+    "node_modules",
+    ".next",
+    "dist",
+    ".git",
+    "app/api/**", // Exclude API routes
+  ],
+};
+```
+
+### Component Library
+
+```jsx
+const CONFIG = {
+  filesToScan: [
+    "src/**/*.{tsx,jsx,ts,js}",
+    "stories/**/*.{tsx,jsx}", // Storybook stories
+  ],
+  excludePatterns: [
+    "node_modules",
+    ".next",
+    "dist",
+    ".git",
+    "src/**/*.test.*",
+    "src/**/*.stories.*",
+  ],
+};
+```

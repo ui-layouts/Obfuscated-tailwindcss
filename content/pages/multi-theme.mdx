@@ -1,0 +1,83 @@
+export const metadata = {
+  metadataBase: new URL("https://obfustail.ui-layouts.com/"),
+  title: "Dark & Light Theme Support",
+  description:
+    "Obfus-Tail automatically supports dark and light theme switching through the power of Tailwind CSS variants. When you use dark mode prefixes in your classes, they're preserved and work seamlessly with the generated obfuscated CSS.",
+  keywords: [
+    "Obfus-Tail dark theme",
+    "Tailwind CSS dark mode",
+    "Light dark theme switching",
+    "@custom-variant directive",
+    "CSS theme variants",
+    "Obfuscation theme support",
+  ],
+};
+
+## Theme Support
+
+The obfuscation script includes a special CSS directive that enables dark mode support:
+
+```css
+/* Auto-generated in obfuscated-styles.css */
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+### @custom-variant
+
+This CSS directive is the key to making dark mode work with obfuscated classes:
+
+- **`@custom-variant dark`**: Creates a custom variant named `dark` that can be used with `@apply`
+- **`&:where(.dark, .dark *)`**: Defines when the dark variant should apply:
+  - `.dark`: When the element itself has the `dark` class
+  - `.dark *`: When any parent element has the `dark` class
+- **The `where()` pseudo-class**: Adds specificity without increasing weight
+
+### How It Works
+
+When you write `dark:bg-gray-900` in your JSX:
+
+1. **Obfuscation**: The class gets obfuscated to something like `x1y2z3`
+2. **CSS Generation**: The obfuscated CSS includes the dark variant:
+   ```css
+   .x1y2z3 {
+     @apply bg-gray-900;
+   }
+   ```
+3. **Theme Application**: The `@custom-variant dark` directive makes this rule only apply when `.dark` is present
+
+### Why This Works
+
+- **No JavaScript runtime**: Theme switching is pure CSS
+- **Performance**: No class manipulation needed for styling
+- **Flexibility**: Works with any theme switching implementation
+- **Compatibility**: Follows Tailwind's dark mode conventions
+
+This directive ensures that any class with `dark:` prefix will only apply when the `.dark` class is present on an element or its parent, making theme switching seamless and performant.
+
+### Notes
+
+I tried using `@variant dark` in the CSS class, but it doesn't work properly:
+
+```css
+.o7ULEVz8 {
+  @apply inline-flex justify-center w-fit mx-auto items-center gap-1 bg-white border py-0.5 pl-0.5 pr-3 text-xs;
+
+  @variant dark {
+    @apply bg-blue-400 text-white;
+  }
+}
+```
+
+However, this approach `.dark` works perfectly:
+
+```css
+.R5FZb6Dk {
+  @apply mb-4 rounded bg-blue-100 p-2 text-blue-500;
+}
+
+.dark .R5FZb6Dk {
+  @apply bg-blue-400 text-white;
+}
+```
+
+The second method works because it directly targets the obfuscated class when the `.dark` class is present on a parent element, which is exactly how the `@custom-variant dark` directive is designed to function.

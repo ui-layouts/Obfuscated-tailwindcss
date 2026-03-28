@@ -15,8 +15,10 @@ const CONFIG = {
   randomNameLength: 8,
 };
 
-const TAILWIND_CLASS_REGEX = /className\s*=\s*["']([^"']+)["']/g;
-const CLASS_ATTR_REGEX = /class\s*=\s*["']([^"']+)["']/g;
+// const TAILWIND_CLASS_REGEX = /className\s*=\s*["`]([\s\S]*?)["`]/g;
+const TAILWIND_CLASS_REGEX =
+  /\bclassName\s*=\s*(["'`])((?:\\.|(?!\1)[\s\S])*)\1/g;
+const CLASS_ATTR_REGEX = /\bclass\s*=\s*(["'`])((?:\\.|(?!\1)[\s\S])*)\1/g;
 
 const CUSTOM_CLASSES = [
   "container-wrapper",
@@ -28,6 +30,7 @@ const CUSTOM_CLASSES = [
   "cpu-architecture",
   "cpu-line-1",
   "cpu-line-2",
+  "lucide",
   "cpu-line-3",
   "cpu-line-4",
   "cpu-line-5",
@@ -55,7 +58,7 @@ const CUSTOM_CLASSES = [
   "dark",
 ];
 
-const SKIP_CLASSES = ["rounded-rt-lg", "peer", "prose", "not-prose"];
+const SKIP_CLASSES = ["rounded-rt-lg", "lucide", "peer", "prose", "not-prose"];
 
 function generateRandomClassName() {
   const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -67,9 +70,35 @@ function generateRandomClassName() {
   return result;
 }
 
-function isPureCustomClass(classString) {
-  const classes = classString.trim().split(/\s+/);
-  return classes.every((cls) => CUSTOM_CLASSES.includes(cls));
+function splitTailwindClasses(str) {
+  const result = [];
+  let current = "";
+  let bracketDepth = 0;
+
+  for (let char of str) {
+    if (char === "[") bracketDepth++;
+    if (char === "]") bracketDepth--;
+
+    if (char === " " && bracketDepth === 0) {
+      if (current) result.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  if (current) result.push(current);
+  return result;
+}
+
+function hasBalancedBrackets(str) {
+  let depth = 0;
+  for (const ch of str) {
+    if (ch === "[") depth++;
+    if (ch === "]") depth--;
+    if (depth < 0) return false;
+  }
+  return depth === 0;
 }
 
 function shouldSkipClass(cls) {
@@ -87,21 +116,22 @@ function shouldSkipClass(cls) {
 function getValidClassString(classString) {
   if (!classString || classString.trim().length === 0) return null;
 
-  const validClasses = classString
-    .trim()
-    .split(/\s+/)
-    .filter((cls) => {
+  const validClasses = splitTailwindClasses(classString.trim()).filter(
+    (cls) => {
       if (!cls || cls.length < 2) return false;
-      if (cls.includes(",")) return false;
+      // if (cls.includes(",")) return false;
       if (cls.includes("`") || cls.includes("$")) return false;
       if (cls.includes("{") || cls.includes("}")) return false;
       if (cls.endsWith("-")) return false;
       if (cls.endsWith(":")) return false;
       if (shouldSkipClass(cls)) return false;
-      if (cls.includes("[") && !cls.includes("]")) return false;
-      if (cls.includes("]") && !cls.includes("[")) return false;
+      // Allow Tailwind arbitrary value brackets
+      if (!hasBalancedBrackets(cls)) return false;
+      // if (cls.includes("[") && !cls.includes("]")) return false;
+      // if (cls.includes("]") && !cls.includes("[")) return false;
       return true;
-    });
+    },
+  );
 
   if (validClasses.length === 0) return null;
   return validClasses.join(" "); // ← calling .join on a STRING, not array!
@@ -116,23 +146,22 @@ function extractClassStrings(content) {
     if (!raw) return;
 
     // ✅ Only keep non-skip classes for obfuscation
-    const toObfuscate = raw
-      .split(/\s+/)
+    const toObfuscate = splitTailwindClasses(raw)
       .filter((cls) => !shouldSkipClass(cls))
       .join(" ");
 
     const valid = getValidClassString(toObfuscate);
-    if (valid) classStrings.add(toObfuscate); // ✅ store only the obfuscatable part
+    if (valid) classStrings.add(valid); // ✅ store only the obfuscatable part
   };
 
   let match;
   while ((match = TAILWIND_CLASS_REGEX.exec(content)) !== null) {
-    processRaw(match[1] || "");
+    processRaw(match[2] || "");
   }
   TAILWIND_CLASS_REGEX.lastIndex = 0;
 
   while ((match = CLASS_ATTR_REGEX.exec(content)) !== null) {
-    processRaw(match[1] || "");
+    processRaw(match[2] || "");
   }
   CLASS_ATTR_REGEX.lastIndex = 0;
 
@@ -172,30 +201,22 @@ function replaceClassesInFile(filePath, mapping) {
   let content = fs.readFileSync(filePath, "utf8");
   let modified = false;
 
-  TAILWIND_CLASS_REGEX.lastIndex = 0;
-  CLASS_ATTR_REGEX.lastIndex = 0;
-
-  const makeReplacer =
-    () =>
-    (match, ...groups) => {
+  const replaceAttr = (regex, attrName) => {
+    content = content.replace(regex, (fullMatch, quote, classString) => {
       try {
-        const classString = (
-          groups.slice(0, 4).find((g) => g != null) || ""
-        ).trim();
-        if (!classString) return match;
+        const raw = (classString || "").trim();
+        if (!raw) return fullMatch;
 
-        // ✅ Build the key the same way extractClassStrings does
-        const toObfuscate = classString
-          .split(/\s+/)
+        const parts = splitTailwindClasses(raw);
+
+        const toObfuscate = parts
           .filter((cls) => !shouldSkipClass(cls))
           .join(" ");
 
         const obfuscated = mapping[toObfuscate];
-        if (!obfuscated) return match;
+        if (!obfuscated) return fullMatch;
 
-        // ✅ Keep skip classes in HTML
-        const keepInHtml = classString
-          .split(/\s+/)
+        const keepInHtml = parts
           .filter((cls) => shouldSkipClass(cls))
           .join(" ");
 
@@ -204,18 +225,15 @@ function replaceClassesInFile(filePath, mapping) {
           : obfuscated;
 
         modified = true;
-        return match.split(classString).join(replacement);
-      } catch (e) {
-        return match;
+        return `${attrName}=${quote}${replacement}${quote}`;
+      } catch {
+        return fullMatch;
       }
-    };
+    });
+  };
 
-  try {
-    content = content.replace(TAILWIND_CLASS_REGEX, makeReplacer());
-  } catch (e) {}
-  try {
-    content = content.replace(CLASS_ATTR_REGEX, makeReplacer());
-  } catch (e) {}
+  replaceAttr(TAILWIND_CLASS_REGEX, "className");
+  replaceAttr(CLASS_ATTR_REGEX, "class");
 
   if (modified) fs.writeFileSync(filePath, content, "utf8");
   return modified;
@@ -252,22 +270,24 @@ function generateMappingCss(mapping) {
   css += "/* DO NOT EDIT MANUALLY - regenerated on build */\n\n";
   css += '@reference "tailwindcss";\n';
   css += '@reference "./token.css";\n\n';
+  css += "@custom-variant dark (&:where(.dark, .dark *));\n\n";
 
   for (const [classString, obfuscatedName] of Object.entries(mapping)) {
     // Keep variant classes like dark:, hover:, md:, 2xl: in @apply
     // they work correctly when grouped together in one rule
-    const validClasses = classString
-      .split(/\s+/)
+    const validClasses = splitTailwindClasses(classString.trim())
       .filter((cls) => {
         if (!cls || cls.length < 2) return false;
-        if (cls.includes(",")) return false;
+        // if (cls.includes(",")) return false;
         if (cls.includes("`") || cls.includes("$")) return false;
         if (cls.includes("{") || cls.includes("}")) return false;
         if (cls.endsWith("-")) return false;
         if (cls.endsWith(":")) return false;
         if (shouldSkipClass(cls)) return false;
-        if (cls.includes("[") && !cls.includes("]")) return false;
-        if (cls.includes("]") && !cls.includes("[")) return false;
+        // Allow Tailwind arbitrary value brackets
+        if (!hasBalancedBrackets(cls)) return false;
+        // if (cls.includes("[") && !cls.includes("]")) return false;
+        // if (cls.includes("]") && !cls.includes("[")) return false;
 
         return true;
       })

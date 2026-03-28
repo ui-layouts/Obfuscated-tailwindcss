@@ -1,6 +1,13 @@
 "use client";
 import React from "react";
-import { ChartNoAxesGantt, CodeXml, Rocket } from "lucide-react";
+import {
+  ChartNoAxesGantt,
+  CodeXml,
+  FlaskConical,
+  Rocket,
+  ScanText,
+  Settings,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GapPattern } from "./gap-pattern";
@@ -13,16 +20,28 @@ export const basePath = [
     tags: ["get-started", "get started", "get-started", "get started"],
   },
   {
-    href: "/docs/how-it-works",
-    name: "How It Works",
-    icon: <ChartNoAxesGantt />,
-    tags: ["how-it-works", "how it works", "how-it-works", "how it works"],
-  },
-  {
     href: "/docs/skip-classes",
     name: "Skip Classes",
     icon: <CodeXml />,
     tags: ["skip-classes", "skip classes", "skip-classes", "skip classes"],
+  },
+  {
+    href: "/docs/file-scanning",
+    name: "File Scanning",
+    icon: <ScanText />,
+    tags: ["file-scanning", "file scanning", "file-scanning", "file scanning"],
+  },
+  {
+    href: "/docs/multi-theme",
+    name: "Multi-Theme",
+    icon: <FlaskConical />,
+    tags: ["multi-theme", "multi theme", "multi-theme", "multi theme"],
+  },
+  {
+    href: "/docs/how-it-works",
+    name: "How It Works",
+    icon: <Settings />,
+    tags: ["how-it-works", "how it works", "how-it-works", "how it works"],
   },
 ];
 

@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://obfuscated-tailwind.ui-layouts.com/sitemap.xml
+Sitemap: https://obfustail.ui-layouts.com/sitemap.xml
 
 # Block common non-content paths
 Disallow: /api/

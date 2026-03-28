@@ -1,8 +1,8 @@
-# Obfustail
+# Obfus-Tail
 A build-time CSS obfuscation tool for TailwindCSS that transforms readable utility classes into optimized, obfuscated class names.
 
 ## Description
-Transform your readable Tailwind utility classes into optimized, obfuscated CSS that protects your code, reduces bundle size, and enhances performance.
+Transform your readable Tailwind utility classes into optimized, obfuscated CSS that protects your code, reduces bundle size, and enhances performance. Perfect for production applications where code protection and optimization matter.
 
 ## Key Features
 - **Code Protection**: Hide your styling implementation from competitors
@@ -10,12 +10,44 @@ Transform your readable Tailwind utility classes into optimized, obfuscated CSS 
 - **Performance Boost**: Faster parsing and improved page load times
 - **Build-time Processing**: Automatic obfuscation during the build process
 - **Zero Runtime Overhead**: No performance impact on your application
+- **Dark/Light Theme Support**: Full theme switching with @custom-variant directive
+- **File Scanning Control**: Configurable include/exclude patterns for precise file targeting
+- **Skip Classes**: Preserve specific classes from obfuscation when needed
 
 ## Quick Start
 1. Install dependencies: `npm install uuid && npm install -D glob @types/uuid`
 2. Add the obfuscation script to your project
 3. Update your build script: `"build": "node scripts/obfuscate-tailwind.js && next build"`
 4. Import the generated CSS in your layout
+
+## Documentation
+- Getting Started: https://obfustail.ui-layouts.com/docs/getting-started
+- How It Works: https://obfustail.ui-layouts.com/docs/how-it-works
+- File Scanning: https://obfustail.ui-layouts.com/docs/file-scanning
+- Skip Classes: https://obfustail.ui-layouts.com/docs/skip-classes
+- Multi-Theme Support: https://obfustail.ui-layouts.com/docs/multi-theme
+
+## Example Usage
+```javascript
+const CONFIG = {
+  filesToScan: [
+    "src/**/*.{jsx,tsx,js,ts,html}",
+    "pages/**/*.{jsx,tsx}",
+    "components/**/*.{jsx,tsx}",
+    "app/**/*.{jsx,tsx}",
+  ],
+  excludePatterns: ["node_modules", ".next", "dist", ".git"],
+  outputCssPath: "app/obfuscated-styles.css",
+  mapFilePath: ".obfuscation-map.json",
+  randomNameLength: 8,
+};
+```
+
+## Theme Support
+The tool automatically generates CSS with dark mode support:
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
 
 ## GitHub Repository
 https://github.com/ui-layouts/Obfuscated-tailwindcss
@@ -24,4 +56,4 @@ https://github.com/ui-layouts/Obfuscated-tailwindcss
 Naymur - https://x.com/naymur_dev
 
 ## Tags
-TailwindCSS, CSS obfuscation, bundle optimization, code protection, performance, Next.js, React, build tools
+TailwindCSS, CSS obfuscation, bundle optimization, code protection, performance, Next.js, React, build tools, dark mode, theme support, file scanning, class skipping
