@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Metadata } from "next";
 import { Container } from "@/components/container";
@@ -7,8 +6,8 @@ import Footer from "@/components/footer";
 import { Globe } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Obfustail | Hide tailwindcss Classes",
-  description: "Create a new CSS layer top of your tailwindcss ",
+  title: "Obfustail",
+  description: "Scan, Fix & Obfuscate TailwindCSS Classes",
   keywords: [
     "TailwindCSS",
     "Hide tailwindcss Classes",

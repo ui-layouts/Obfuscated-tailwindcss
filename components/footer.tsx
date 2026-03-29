@@ -19,7 +19,7 @@ function Footer({ className }: { className?: string }) {
           </a>{" "}
           . The source code is available on{" "}
           <a
-            href="https://github.com/ui-layouts/uilayouts"
+            href="https://github.com/ui-layouts/Obfuscated-tailwindcss"
             target="_blank"
             rel="noreferrer"
             className="font-medium underline underline-offset-4"
