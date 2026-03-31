@@ -127,7 +127,7 @@ export default function Home() {
               (Beta)
             </span>
           </a>
-          <div className="text-center mb-16">
+          <div className="text-center mb-5">
             <h1 className="2xl:text-5xl lg:text-4xl text-3xl font-medium text-neutral-900 mb-4 relative">
               Obfuscated Tailwindcss
             </h1>
@@ -154,7 +154,19 @@ export default function Home() {
               </a>
             </div>
           </div>
-
+          <div className="flex justify-center pb-5">
+            <a
+              href="https://peerlist.io/naymurr/project/obfustail"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src="https://peerlist.io/api/v1/projects/embed/PRJHLKLRR98JG8EQ7C7RK9BNPGENRK?showUpvote=true&theme=light"
+                alt="Obfustail"
+                style={{ width: "auto", height: "72px" }}
+              />
+            </a>
+          </div>
           {/* Interactive Demo */}
           <section className="relative">
             <a
