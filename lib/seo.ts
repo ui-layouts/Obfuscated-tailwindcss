@@ -9,6 +9,7 @@ export const siteConfig = {
   ogImage: "/og.jpg",
   author: "Naymur",
   xHandle: "@naymur_dev",
+  xProfile: "https://x.com/naymur_dev",
 };
 
 export const defaultKeywords = [
@@ -27,7 +28,7 @@ export const defaultMetadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
   keywords: defaultKeywords,
-  authors: [{ name: siteConfig.author, url: "https://x.com/naymur_dev" }],
+  authors: [{ name: siteConfig.author, url: siteConfig.xProfile }],
   creator: siteConfig.author,
   publisher: "UI Layouts",
   alternates: {
@@ -81,6 +82,6 @@ export const softwareAppJsonLd = {
   author: {
     "@type": "Person",
     name: siteConfig.author,
-    url: "https://x.com/naymur_dev",
+    url: siteConfig.xProfile,
   },
 };

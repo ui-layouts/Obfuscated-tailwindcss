@@ -12,6 +12,16 @@ import { GapPattern } from "@/components/gap-pattern";
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
+function getDocPathAndUrl(slug: string | string[] | undefined) {
+  const normalizedSlug = Array.isArray(slug) ? slug.join("/") : (slug ?? "");
+  const docPath = normalizedSlug ? `/docs/${normalizedSlug}` : "/docs";
+  return {
+    docPath,
+    docUrl: `${siteConfig.url}${docPath}`,
+    normalizedSlug,
+  };
+}
+
 export async function generateStaticParams() {
   const docs = await getAllDocs();
   return docs.map((doc) => ({
@@ -23,10 +33,10 @@ export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  let slug = params.slug || "";
+  const { docUrl, normalizedSlug } = getDocPathAndUrl(params.slug);
 
   // @ts-ignore
-  const doc = await getDocBySlug(slug);
+  const doc = await getDocBySlug(normalizedSlug);
   if (!doc?.content?.metadata) return {};
 
   const md = doc.content.metadata;
@@ -39,9 +49,6 @@ export async function generateMetadata(props: {
         "UI Layouts");
 
   const description = md.description ?? "";
-  const docPath = slug ? `/docs/${slug}` : "/docs";
-  const docUrl = `${siteConfig.url}${docPath}`;
-
   return {
     // Core
     metadataBase: md.metadataBase ?? new URL(siteConfig.url),
@@ -117,17 +124,14 @@ export default async function DocPage(props: {
 
   console.log(params);
 
-  let slug = params.slug || "";
+  const { docUrl, normalizedSlug } = getDocPathAndUrl(params.slug);
 
   // @ts-ignore
-  const doc = await getDocBySlug(slug);
+  const doc = await getDocBySlug(normalizedSlug);
 
   if (!doc) notFound();
 
   const { default: Content } = doc.content;
-  const docPath = slug ? `/docs/${slug}` : "/docs";
-  const docUrl = `${siteConfig.url}${docPath}`;
-
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
