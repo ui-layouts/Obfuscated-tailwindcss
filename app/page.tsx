@@ -4,93 +4,67 @@ import { Container } from "@/components/container";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Globe } from "lucide-react";
+import { defaultKeywords, siteConfig } from "@/lib/seo";
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How does Obfustail protect Tailwind CSS classes?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Obfustail remaps readable Tailwind utility classes into obfuscated selectors during build, which helps hide implementation details in production.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does Obfustail require runtime JavaScript?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. Obfustail runs at build time and ships optimized CSS output, so no runtime dependency is required for class obfuscation.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where should I start with Obfustail?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Start from the documentation page to configure scanning rules, skip classes, and multi-theme settings before your production build.",
+      },
+    },
+  ],
+};
 
 export const metadata: Metadata = {
-  title: "Obfustail",
-  description: "Scan, Fix & Obfuscate TailwindCSS Classes",
-  keywords: [
-    "TailwindCSS",
-    "Hide tailwindcss Classes",
-    "CSS obfuscation",
-    "bundle optimization",
-    "code protection",
-    "performance",
-    "Next.js",
-    "React",
-    "CSS minification",
-    "class name obfuscation",
-    "build optimization",
-    "CSS compression",
-    "utility classes",
-    "frontend optimization",
-    "web performance",
-    "bundle size reduction",
-    "CSS security",
-    "code obfuscation",
-    "Tailwind optimization",
-    "static site generation",
-    "CSS purging",
-    "production build",
-    "asset optimization",
-    "CSS delivery",
-    "performance optimization",
-    "web development",
-    "CSS framework",
-    "utility-first CSS",
-    "responsive design",
-    "mobile optimization",
-    "page speed",
-    "core web vitals",
-    "SEO optimization",
-    "frontend security",
-    "intellectual property protection",
-    "source code protection",
-    "CSS optimization tools",
-    "build tools",
-    "development workflow",
-    "deployment optimization",
-  ],
-  authors: [{ name: "Naymur", url: "https://x.com/naymur_dev" }],
-  creator: "Naymur",
-  publisher: "UI Layouts",
+  title: "Tailwind CSS Obfuscator",
+  description:
+    "Scan, fix, and obfuscate TailwindCSS classes with a zero-runtime workflow. Improve CSS delivery while protecting implementation details.",
+  keywords: [...defaultKeywords, "tailwind css obfuscator", "scan and obfuscate"],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Obfustail - Protect & Optimize Your CSS",
+    title: "Obfustail - Tailwind CSS Obfuscator",
     description:
-      "Transform your readable Tailwind utility classes into optimized, obfuscated CSS that protects your code, reduces bundle size, and enhances performance.",
-    url: "https://obfuscated-tailwind.ui-layouts.com",
-    siteName: "Obfustail",
+      "Scan, fix, and obfuscate TailwindCSS classes with no runtime dependency.",
+    url: siteConfig.url,
     images: [
       {
-        url: "/og.jpg",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: "Obfustail - CSS Protection and Optimization",
+        alt: "Obfustail homepage",
       },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Obfustail - Protect & Optimize Your CSS",
+    title: "Obfustail - Tailwind CSS Obfuscator",
     description:
-      "Transform your Tailwind classes into obfuscated CSS. Reduce bundle size and protect your code.",
-    images: ["/og.jpg"],
-    creator: "@naymur_dev",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "your-google-verification-code",
+      "Scan, fix, and obfuscate TailwindCSS classes with no runtime dependency.",
+    images: [siteConfig.ogImage],
   },
 };
 
@@ -98,6 +72,10 @@ export default function Home() {
   return (
     <Container>
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="min-h-screen bg-linear-to-br from-neutral-50 to-neutral-100">
         {/* Hero Section */}
         <div className="max-w-6xl mx-auto px-6 py-16">
@@ -111,14 +89,14 @@ export default function Home() {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M35.5 35.5C16.5667 35.5 4.73333 44.9444 0 63.8333C7.1 54.3889 15.3833 50.8472 24.85 53.2083C30.2513 54.5568 34.1116 58.4657 38.3847 62.7918C45.3453 69.8411 53.4025 78 71 78C89.9333 78 101.767 68.5556 106.5 49.6667C99.4 59.1111 91.1167 62.6528 81.65 60.2917C76.2487 58.9458 72.3884 55.0343 68.1153 50.7082C61.1547 43.6589 53.0975 35.5 35.5 35.5Z"
                 fill="#38BDF8"
               />
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M80.21 50.4811C88.4673 33.4433 85.1291 18.6757 70.1956 6.17832C75.598 16.6865 75.1726 25.6851 68.9192 33.1743C65.3501 37.4467 60.149 39.2158 54.3924 41.1744C45.0131 44.3639 34.1571 48.0561 26.4824 63.8918C18.2251 80.9297 21.5633 95.6973 36.4968 108.195C31.0944 97.6865 31.5198 88.6879 37.7732 81.1987C41.3399 76.9251 46.5434 75.1572 52.3 73.1986C61.6792 70.0091 72.5353 66.3169 80.21 50.4811Z"
                 fill="#38BDF8"
               />
@@ -177,7 +155,7 @@ export default function Home() {
             >
               <Image
                 src="/og.jpg"
-                alt="Demo"
+                alt="Demo of Obfustail Tailwind obfuscation"
                 className="rounded-md"
                 width={2000}
                 height={800}
