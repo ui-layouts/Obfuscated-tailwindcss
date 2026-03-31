@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getDocBySlug, getAllDocs } from "@/lib/docs";
-import { absoluteUrl, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/seo";
 import { Component } from "lucide-react";
 import TableOfContents from "@/components/table-of-contents";
@@ -39,6 +39,8 @@ export async function generateMetadata(props: {
         "UI Layouts");
 
   const description = md.description ?? "";
+  const docPath = slug ? `/docs/${slug}` : "/docs";
+  const docUrl = `${siteConfig.url}${docPath}`;
 
   return {
     // Core
@@ -46,7 +48,7 @@ export async function generateMetadata(props: {
     title: title.includes("| UI Layouts") ? title : `${title} | UI Layouts`,
     description,
     alternates: {
-      canonical: absoluteUrl(doc.slug),
+      canonical: docUrl,
     },
 
     // Keywords (still useful for Bing + some SEO tools)
@@ -65,7 +67,7 @@ export async function generateMetadata(props: {
         md.openGraph?.title ??
         (title.includes("| UI Layouts") ? title : `${title} | UI Layouts`),
       description: md.openGraph?.description ?? description,
-      url: md.openGraph?.url ?? absoluteUrl(doc.slug),
+      url: md.openGraph?.url ?? docUrl,
       images: md.openGraph?.images ?? [
         {
           url: "https://ui-layouts.com/component-og.jpg",
@@ -123,6 +125,8 @@ export default async function DocPage(props: {
   if (!doc) notFound();
 
   const { default: Content } = doc.content;
+  const docPath = slug ? `/docs/${slug}` : "/docs";
+  const docUrl = `${siteConfig.url}${docPath}`;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -144,7 +148,7 @@ export default async function DocPage(props: {
         "@type": "ListItem",
         position: 3,
         name: doc.content.metadata.title,
-        item: absoluteUrl(doc.slug),
+        item: docUrl,
       },
     ],
   };
@@ -153,7 +157,9 @@ export default async function DocPage(props: {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <section className="md:pr-8 pr-4 lg:pl-0 pl-4 md:w-full max-w-none prose pb-5 prose-h1:text-2xl prose-h1:font-medium prose-h1:mb-4 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-medium prose-h3:text-2xl prose-h3:text-primary/70 prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-medium prose-strong:font-medium prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4 prose-li:mb-1 prose-blockquote:mb-4 prose-table:mb-4 prose-pre:mb-4">
         <article className="mb-4 mt-4 not-prose">

@@ -24,10 +24,7 @@ export const defaultKeywords = [
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
+  title: siteConfig.name,
   description: siteConfig.description,
   keywords: defaultKeywords,
   authors: [{ name: siteConfig.author, url: "https://x.com/naymur_dev" }],
