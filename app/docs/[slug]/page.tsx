@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getDocBySlug, getAllDocs } from "@/lib/docs";
 import { absoluteUrl, cn } from "@/lib/utils";
+import { siteConfig } from "@/lib/seo";
 import { Component } from "lucide-react";
 import TableOfContents from "@/components/table-of-contents";
 import Footer from "@/components/footer";
@@ -41,9 +42,12 @@ export async function generateMetadata(props: {
 
   return {
     // Core
-    metadataBase: md.metadataBase,
+    metadataBase: md.metadataBase ?? new URL(siteConfig.url),
     title: title.includes("| UI Layouts") ? title : `${title} | UI Layouts`,
     description,
+    alternates: {
+      canonical: absoluteUrl(doc.slug),
+    },
 
     // Keywords (still useful for Bing + some SEO tools)
     keywords: md.keywords ?? [],
@@ -120,8 +124,37 @@ export default async function DocPage(props: {
 
   const { default: Content } = doc.content;
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteConfig.url,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Docs",
+        item: `${siteConfig.url}/docs`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: doc.content.metadata.title,
+        item: absoluteUrl(doc.slug),
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <section className="md:pr-8 pr-4 lg:pl-0 pl-4 md:w-full max-w-none prose pb-5 prose-h1:text-2xl prose-h1:font-medium prose-h1:mb-4 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-medium prose-h3:text-2xl prose-h3:text-primary/70 prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-medium prose-strong:font-medium prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4 prose-li:mb-1 prose-blockquote:mb-4 prose-table:mb-4 prose-pre:mb-4">
         <article className="mb-4 mt-4 not-prose">
           <div className="space-y-2 rounded-md bg-neutral-100 p-4 border text-black">
